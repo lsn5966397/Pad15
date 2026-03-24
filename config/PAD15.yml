@@ -1,4 +1,9 @@
----
-include:
-  - board: SuperMininrf52840
-    shield: PAD15
+file_format: "1"
+id: PAD15
+name: PAD15
+type: shield
+url: 
+requires: [nrfmicro_13_52840]
+features:
+
+  - keys
