@@ -47,7 +47,7 @@ source ~/.bashrc
 # 初始化 west（把当前仓库当作 zmk-config）
 west init -l .
 
-# 更新所有源码和模块（包括你 west.yml 里加的 analog-input-driver）
+# 更新所有源码和模块
 west update
 
 # 正式编译命令
