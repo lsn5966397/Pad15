@@ -1,9 +1,9 @@
 # Copyright (c) 2020 The ZMK Contributors
 # SPDX-License-Identifier: MIT
 
-if SHIELD_PAD15
+if SHIELD_pad15
 
 config ZMK_KEYBOARD_NAME
-    default "PAD15"
+    default "pad15"
 
 endif
