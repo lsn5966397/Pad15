@@ -47,7 +47,7 @@ pipx install west
 source ~/.bashrc
 
 # 初始化 west（把当前仓库当作 zmk-config）
-west init -l .
+west init -l
 
 # 
 cd /workspaces/zmk
