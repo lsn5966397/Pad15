@@ -60,6 +60,9 @@ export ZEPHYR_SDK_INSTALL_DIR=~/zephyr-sdk-0.16.5
 # 验证 应该输出： /home/codespace/zephyr-sdk-0.16.5
 echo $ZEPHYR_SDK_INSTALL_DIR
 
+# 注册 Zephyr SDK
+west zephyr-export
+
 # 
 cd /workspaces/zmk
 
