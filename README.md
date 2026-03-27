@@ -57,6 +57,9 @@ cd zephyr-sdk-0.16.5
 
 export ZEPHYR_SDK_INSTALL_DIR=~/zephyr-sdk-0.16.5
 
+# 验证 应该输出： /home/codespace/zephyr-sdk-0.16.5
+echo $ZEPHYR_SDK_INSTALL_DIR
+
 # 
 cd /workspaces/zmk
 
@@ -65,9 +68,6 @@ west update
 
 # 初始化 west（把当前仓库当作 zmk-config）
 west init -l
-
-# 验证 应该输出： /home/codespace/zephyr-sdk-0.16.5
-echo $ZEPHYR_SDK_INSTALL_DIR
 
 # 正式编译命令
 west build -s app -b nice_nano -p -- -DSHIELD=pad15 -DZMK_CONFIG="/workspaces/pad15/config"
