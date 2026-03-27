@@ -66,6 +66,10 @@ west zephyr-export
 # 安装 ninja-build
 sudo apt update && sudo apt install -y ninja-build
 
+#
+pipx install pip
+pip install -r /workspaces/zephyr/scripts/requirements.txt
+
 # 
 cd /workspaces/zmk
 
