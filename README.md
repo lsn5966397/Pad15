@@ -67,8 +67,7 @@ west zephyr-export
 sudo apt update && sudo apt install -y ninja-build
 
 #
-pipx install pip
-pip install -r /workspaces/zephyr/scripts/requirements.txt
+/usr/local/py-utils/venvs/west/bin/python -m pip install -r /workspaces/zephyr/scripts/requirements.txt
 
 # 
 cd /workspaces/zmk
