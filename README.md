@@ -8,7 +8,9 @@ This is a wireless dual-mode multifunction mini-keyboard project with EC11 knob 
 # ZMK编写
 
 首先本文的内容具有时效性，以本文最后的编辑时间为准。
+
 将买来的promicro（supermini） nrf52840 开发板直接接到电脑上，原有的tf2文件是基于C++的，现在我们将着手编译ZMK框架的tf2文件，做好以后直接放入开发板对应的存储设备，可以自动完成烧录，非常方便。
+
 现在的ZMK支持只写配置文件，配置文件的结构如下：
 ```
 pad15/       ← 项目根目录
