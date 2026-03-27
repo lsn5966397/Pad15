@@ -7,6 +7,8 @@
 #include <dt-bindings/zmk/rgb.h>        // RGB 灯效控制
 #include <dt-bindings/zmk/outputs.h>    // 输出切换 (USB/BLE)
 #include <dt-bindings/zmk/pointing.h>   /* 鼠标滚轮模拟*/
+#include <dt-bindings/zmk/backlight.h>  //背光控制
+
 
 /* 第二部分：定义你的层级名称（方便阅读，不是必须的，但极度推荐） */
 #define DEFAULT 0   // 办公模式
@@ -39,24 +41,14 @@
     behaviors {
         EC11_ROTATE: EC11_ROTATE {
             compatible = "zmk,behavior-sensor-rotate";
-            label = "EC11_ROTATE";
             #sensor-binding-cells = <0>;
             bindings = <&kp C_VOLUME_UP>, <&kp C_VOL_DN>;
         };
 
         double_tap_up: double_tap_up {
             compatible = "zmk,behavior-tap-dance";
-            label = "DOUBLE_TAP_UP";
             #binding-cells = <0>;
             bindings = <&kp UP>, <&kp LS(UP)>;
-        };
-
-        encoder_mute: encoder_mute {
-            compatible = "zmk,behavior-hold-tap";
-            label = "ENCODER_MUTE";
-            #binding-cells = <0>;
-            tap-time = <200>;
-            bindings = <&kp C_MUTE>, <&trans>;
         };
     };
 
@@ -66,7 +58,7 @@
         office {
             sensor-bindings = <&EC11_ROTATE>;
             bindings = <
-                &kp DEL       &kp HOME      &kp END          &encoder_mute        &bt BT_CLR &bootloader
+                &kp DEL       &kp HOME      &kp END          &kp C_MUTE        &bt BT_CLR   &bootloader
                 &kp NUMBER_7  &kp NUMBER_8  &kp NUMBER_9     &mkp LCLK
                 &kp NUMBER_4  &kp NUMBER_5  &kp NUMBER_6
                 &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3
@@ -75,15 +67,15 @@
                 /* 4 个触摸板改为持续滚动（垂直方向优先） */
                 &msc SCRL_UP      /* P0.17 - 上方区域 */
                 &msc SCRL_UP      /* P0.20 */
-                &msc SCRL_DN      /* P0.22 */
-                &msc SCRL_DN      /* P0.24 - 下方区域 */
+                &msc SCRL_DOWN      /* P0.22 */
+                &msc SCRL_DOWN      /* P0.24 - 下方区域 */
             >;
         };
 
         function {
             sensor-bindings = <&EC11_ROTATE>;
             bindings = <
-                &kp K_LOCK  &bl BL_INC  &bl BL_DEC  &encoder_mute        &bt BT_CLR &bootloader
+                &kp K_LOCK  &bl BL_INC  &bl BL_DEC  &kp C_MUTE        &bt BT_CLR    &bootloader
                 &kp F7      &kp F8      &kp F9      &mkp LCLK
                 &kp F4      &kp F5      &kp F6
                 &kp F1      &kp F2      &kp F3
@@ -91,15 +83,15 @@
 
                 &msc SCRL_UP
                 &msc SCRL_UP
-                &msc SCRL_DN
-                &msc SCRL_DN
+                &msc SCRL_DOWN
+                &msc SCRL_DOWN
             >;
         };
 
         game {
             sensor-bindings = <&EC11_ROTATE>;
             bindings = <
-                &trans     &trans          &trans     &trans        &bt BT_CLR &bootloader
+                &trans     &trans          &trans     &trans        &bt BT_CLR  &bootloader
                 &trans     &double_tap_up  &trans     &trans
                 &kp LEFT   &kp DOWN        &kp RIGHT
                 &kp LCTRL  &trans          &kp LALT
@@ -107,8 +99,8 @@
 
                 &msc SCRL_UP
                 &msc SCRL_UP
-                &msc SCRL_DN
-                &msc SCRL_DN
+                &msc SCRL_DOWN
+                &msc SCRL_DOWN
             >;
         };
     };
