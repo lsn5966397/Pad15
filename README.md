@@ -51,5 +51,5 @@ west init -l .
 west update
 
 # 正式编译命令
-$ west build -s app -b nice_nano -p -- -DSHIELD=pad15 -DZMK_CONFIG="/workspaces/pad15/config"
+west build -s app -b nice_nano -p -- -DSHIELD=pad15 -DZMK_CONFIG="/workspaces/pad15/config"
 ```
