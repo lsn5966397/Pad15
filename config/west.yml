@@ -11,7 +11,7 @@ manifest:
     # 引入 ZMK 官方核心组件
     - name: zmk
       remote: zmkfirmware
-      revision: main
+      revision: v0.3
       import: app/west.yml
     # 引入模拟摇杆驱动模块
     - name: zmk-analog-input-driver
