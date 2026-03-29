@@ -13,7 +13,6 @@
 
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
-        label = "KSCAN";
     
         diode-direction = "col2row";
         col-gpios
@@ -55,7 +54,6 @@
     /* ==================== EC11 旋转编码器 ==================== */
     encoder0: encoder {
         compatible = "alps,ec11";
-        label = "EC11";
         a-gpios = <&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
         b-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
         steps = <80>;          /* 大部分 EC11 用 80，觉得太灵敏可以改成 40 或 30 */
