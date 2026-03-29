@@ -58,49 +58,37 @@
         office {
             sensor-bindings = <&EC11_ROTATE>;
             bindings = <
-                &kp DEL       &kp HOME      &kp END          &kp C_MUTE        &bt BT_CLR   &bootloader
-                &kp NUMBER_7  &kp NUMBER_8  &kp NUMBER_9     &mkp LCLK
-                &kp NUMBER_4  &kp NUMBER_5  &kp NUMBER_6
-                &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3
-                &kp NUMBER_0  &kp DOT       &kp PRINTSCREEN
-
-                /* 4 个触摸板改为持续滚动（垂直方向优先） */
-                &msc SCRL_UP      /* P0.17 - 上方区域 */
-                &msc SCRL_UP      /* P0.20 */
-                &msc SCRL_DOWN      /* P0.22 */
-                &msc SCRL_DOWN      /* P0.24 - 下方区域 */
+                &kp DEL     &kp HOME    &kp END      &kp C_MUTE
+                &kp N7      &kp N8      &kp N9       &mkp LCLK
+                &kp N4      &kp N5      &kp N6       &none
+                &kp N1      &kp N2      &kp N3       &none
+                &kp N0      &kp DOT     &kp PS       &none
+                /* 4个触摸键（第4列） */
+                &msc SCRL_UP &msc SCRL_UP &msc SCRL_DOWN &msc SCRL_DOWN
             >;
         };
 
         function {
             sensor-bindings = <&EC11_ROTATE>;
             bindings = <
-                &kp K_LOCK  &bl BL_INC  &bl BL_DEC  &kp C_MUTE        &bt BT_CLR    &bootloader
+                &kp K_LOCK  &bl BL_INC  &bl BL_DEC  &kp C_MUTE
                 &kp F7      &kp F8      &kp F9      &mkp LCLK
-                &kp F4      &kp F5      &kp F6
-                &kp F1      &kp F2      &kp F3
-                &kp F10     &kp F11     &kp F12
-
-                &msc SCRL_UP
-                &msc SCRL_UP
-                &msc SCRL_DOWN
-                &msc SCRL_DOWN
+                &kp F4      &kp F5      &kp F6      &none
+                &kp F1      &kp F2      &kp F3      &none
+                &kp F10     &kp F11     &kp F12     &none
+                &msc SCRL_UP &msc SCRL_UP &msc SCRL_DOWN &msc SCRL_DOWN
             >;
         };
 
         game {
             sensor-bindings = <&EC11_ROTATE>;
             bindings = <
-                &trans     &trans          &trans     &trans        &bt BT_CLR  &bootloader
-                &trans     &double_tap_up  &trans     &trans
-                &kp LEFT   &kp DOWN        &kp RIGHT
-                &kp LCTRL  &trans          &kp LALT
-                &trans     &trans          &kp SPACE
-
-                &msc SCRL_UP
-                &msc SCRL_UP
-                &msc SCRL_DOWN
-                &msc SCRL_DOWN
+                &trans      &trans      &trans      &trans
+                &trans      &double_tap_up &trans   &trans
+                &kp LEFT    &kp DOWN    &kp RIGHT   &none
+                &kp LCTRL   &trans      &kp LALT    &none
+                &trans      &trans      &kp SPACE   &none
+                &msc SCRL_UP &msc SCRL_UP &msc SCRL_DOWN &msc SCRL_DOWN
             >;
         };
         /* === ZMK Studio 必须的保留层 === */
