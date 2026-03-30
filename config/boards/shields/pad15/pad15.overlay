@@ -102,6 +102,9 @@
         sensors = <&encoder_0>;
     };
 */
+
+}
+
 	/* WS2812 灯带 */
 	&pinctrl {
 	    spi3_default: spi3_default {
@@ -135,8 +138,6 @@
 	        color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
 	    };
 	};
-}
-
 
 
 
