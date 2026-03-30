@@ -1,7 +1,6 @@
 #include <dt-bindings/zmk/matrix_transform.h>
 #include <dt-bindings/led/led.h>
 #include <dt-bindings/pinctrl/nrf-pinctrl.h>
-#include <zephyr/dt-bindings/input/input-event-codes.h>
 #include "pad15.dtsi"
 
 /{
@@ -31,6 +30,7 @@
                     <&gpio0 9 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
     };
 
+/*
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-direct";
         input-gpios
@@ -40,6 +40,7 @@
             , <&gpio0 24 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>
             ;
     };
+*/
 
     /* 2. 矩阵转换 */
 	transform: matrix_transform {
@@ -49,14 +50,14 @@
 		map = <
 			RC(0,0) RC(0,1) RC(0,2) RC(0,3)
 			RC(1,0) RC(1,1) RC(1,2) RC(1,3)
-			RC(2,0) RC(2,1) RC(2,2) RC(5,0)
-			RC(3,0) RC(3,1) RC(3,2) RC(5,1)
-			RC(4,0) RC(4,1) RC(4,2) RC(5,2)
-									RC(5,3)
+			RC(2,0) RC(2,1) RC(2,2) 
+			RC(3,0) RC(3,1) RC(3,2) 
+			RC(4,0) RC(4,1) RC(4,2) 
+									
 		>;
 	};
 
-    /* 霍尔摇杆 → 鼠标指针 */
+    /* 霍尔摇杆 → 鼠标指针 
     joystick: analog_input_0 {
         compatible = "zmk,analog-input";
         sampling-hz = <100>;
@@ -86,8 +87,9 @@
             report-on-change-only;
         };
     };
+*/
 
-    /* 4. EC11 旋钮（保留你最新的引脚） */
+    /* 4. EC11 旋钮（保留你最新的引脚） 
     encoder_0: encoder_0 {
         compatible = "alps,ec11";
         a-gpios = <&gpio0 29 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
@@ -99,7 +101,7 @@
         compatible = "zmk,keymap-sensors";
         sensors = <&encoder_0>;
     };
-
+*/
 	/* WS2812 灯带 */
 	&pinctrl {
 	    spi3_default: spi3_default {
