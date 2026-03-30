@@ -87,6 +87,19 @@
         };
     };
 
+    /* 4. EC11 旋钮（保留你最新的引脚） */
+    encoder_0: encoder_0 {
+        compatible = "alps,ec11";
+        a-gpios = <&gpio0 29 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
+        b-gpios = <&gpio0 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
+        steps = <80>;
+    };
+
+    sensors {
+        compatible = "zmk,keymap-sensors";
+        sensors = <&encoder_0>;
+    };
+
 	/* WS2812 灯带 */
 	&pinctrl {
 	    spi3_default: spi3_default {
