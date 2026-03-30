@@ -12,7 +12,7 @@
         compatible = "zmk,physical-layout";
         display-name = "pad15";
         transform = <&transform>;
-        kscan = <&kscan0>;               /* 必须指向 composite */
+        kscan = <&kscan0>;               
 
         keys = <&key_physical_attrs 100 100    0    0       0     0     0>
                , <&key_physical_attrs 100 100  100    0       0     0     0>
@@ -32,11 +32,13 @@
                , <&key_physical_attrs 100 100  100  400       0     0     0>
                , <&key_physical_attrs 100 100  200  400       0     0     0>
 
-               /* 4 个触摸键（第四列） */
+               /* 4 个触摸键（第四列）
                , <&key_physical_attrs 100 100  300  300       0     0     0>
                , <&key_physical_attrs 100 100  300  400       0     0     0>
                , <&key_physical_attrs 100 100  300  500       0     0     0>
                , <&key_physical_attrs 100 100  300  600       0     0     0>
+*/
+
                ;
     };
 };
