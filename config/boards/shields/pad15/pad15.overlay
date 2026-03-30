@@ -10,11 +10,7 @@
     zmk,underglow = &led_strip;
 };
 
-	/* 开启 ADC（摇杆用） 
-	&adc {
-	    status = "okay";
-	};
-*/
+
     /* 3. 复合 kscan */
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
@@ -30,17 +26,6 @@
                     <&gpio0 9 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
     };
 
-/*
-    kscan0: kscan {
-        compatible = "zmk,kscan-gpio-direct";
-        input-gpios
-            = <&gpio0 17 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>
-            , <&gpio0 20 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>
-            , <&gpio0 22 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>
-            , <&gpio0 24 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>
-            ;
-    };
-*/
 
     /* 2. 矩阵转换 */
 	transform: matrix_transform {
@@ -56,52 +41,6 @@
 									
 		>;
 	};
-
-    /* 霍尔摇杆 → 鼠标指针 
-    joystick: analog_input_0 {
-        compatible = "zmk,analog-input";
-        sampling-hz = <100>;
-    
-        x-ch {
-            io-channels = <&adc 0>;
-            mv-mid = <1650>;
-            mv-min-max = <1600>;
-            mv-deadzone = <30>;
-            scale-multiplier = <1>;
-            scale-divisor = <60>;
-            invert;
-            evt-type = <INPUT_EV_REL>;
-            input-code = <INPUT_REL_X>;
-        };
-    
-        y-ch {
-            io-channels = <&adc 5>;
-            mv-mid = <1650>;
-            mv-min-max = <1600>;
-            mv-deadzone = <30>;
-            scale-multiplier = <1>;
-            scale-divisor = <60>;
-            invert;
-            evt-type = <INPUT_EV_REL>;
-            input-code = <INPUT_REL_Y>;
-            report-on-change-only;
-        };
-    };
-*/
-
-    /* 4. EC11 旋钮（保留你最新的引脚） 
-    encoder_0: encoder_0 {
-        compatible = "alps,ec11";
-        a-gpios = <&gpio0 29 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
-        b-gpios = <&gpio0 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
-        steps = <80>;
-    };
-
-    sensors {
-        compatible = "zmk,keymap-sensors";
-        sensors = <&encoder_0>;
-    };
-*/
 
 };
 
