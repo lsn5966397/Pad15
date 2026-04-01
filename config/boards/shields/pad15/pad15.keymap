@@ -36,6 +36,14 @@
             key-positions = <6 14>;
             layers = <1>;
         };
+        BOOTLOADER {
+            bindings = <&bootloader>;
+            key-positions = <0 2 14 16>;
+        };
+        BTCLR {
+            bindings = <&bt BT_CLR>;
+            key-positions = <2 14 16>;
+        };
     };
 
     behaviors {
@@ -80,7 +88,7 @@
         game {
             //sensor-bindings = <&EC11_ROTATE>;
             bindings = <
-                &kp K_LOCK      &bt BT_CLR    &bootloader    &kp C_MUTE
+                &kp K_LOCK  &trans        &trans    &kp C_MUTE
                 &trans      &double_tap_up &trans   &trans
                 &kp LEFT    &kp DOWN    &kp RIGHT   &none
                 &kp LCTRL   &trans      &kp LALT    &none
