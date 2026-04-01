@@ -7,7 +7,9 @@ This is a wireless dual-mode multifunction mini-keyboard project with EC11 knob 
 
 # ZMK编写
 
-首先本文的内容具有时效性，以本文最后的编辑时间为准。
+本文的内容具有时效性，以本文最后的编辑时间为准。
+
+项目使用zmk v0.3版本开发。
 
 将买来的promicro（supermini） nrf52840 开发板直接接到电脑上，原有的tf2文件是基于C++的，现在我们将着手编译ZMK框架的tf2文件，做好以后直接放入开发板对应的存储设备，可以自动完成烧录，非常方便。
 
@@ -15,69 +17,39 @@ This is a wireless dual-mode multifunction mini-keyboard project with EC11 knob 
 ```
 pad15/       ← 项目根目录
 ├── config/
-│   ├── pad15.conf
 │   ├── pad15.json
-│   ├── pad15.zmk.yml
 │   └── boards/shields/pad15/
 │       ├── Kconfig.defconfig
 │       ├── Kconfig.shield
 │       ├── pad15.keymap
+│       ├── pad15.zmk.yml
+│       ├── pad15.dtsi
+│       ├── pad15.conf
 │       └── pad15.overlay
 ├── README.md
 └── west.yml
 ```
-这里建议项目名称用小写，因为在`Kconfig.shield` 中需定义大写的项目名称，其余各处均可使用小写，都用大写可能会导致混乱。
+这里建议项目名称用小写，因为在`Kconfig.shield` 中需定义大写的项目名称，其余各处均可使用小写，都用大写可能会导致混乱（比如不小心把该大写的也改成小写了）。
 
-随后回到项目仓库主页，新建一个GitHub代码空间，在终端处输入：
-```
-# 1. 更新系统包
-sudo apt-get update && sudo apt-get upgrade -y
+## 各文件的内容解释
+暂无
 
-# 2. 安装 Python 和 pipx（west 依赖）
-sudo apt-get install -y python3 python3-pip python3-venv curl git
+## zmk keymap editor工具
+https://nickcoutsos.github.io/keymap-editor/
 
-# 3. 安装 pipx 并设置环境
-python3 -m pip install --user pipx
-python3 -m pipx ensurepath
+一个还不错的keymap编辑工具，上手有些难度，因为资料太少了
 
-# 4. 安装 west（ZMK 官方构建工具）
-pipx install west
+## workflow自动编译
+本项目使用GitHub的工作流自动编译，在此之前了解了别的作者本地编译和代码空间编译，尝试了一下，也没有搞成，太复杂了；后来发现可以通过写yml的方式执行自动编译的工作流，解放双手和颈椎，非常方便。
 
-# 5. 重载 shell（让 west 命令可用）
-source ~/.bashrc
+生成好的tf2文件可以在action中查看。
 
-# 6. 安装 Zephyr SDK
-cd ~
-wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.5/zephyr-sdk-0.16.5_linux-x86_64.tar.xz
+# 焊接
+戴口罩，松香吸多了头晕。
 
-tar xvf zephyr-sdk-0.16.5_linux-x86_64.tar.xz
+一定要注意二极管和LED的方向，如果是有方向的电解电容，也需要注意方向。
 
-cd zephyr-sdk-0.16.5
-./setup.sh
+焊锡不要上太多，多了会冒尖、挂到别的焊盘上、短路；上的太少会虚焊没反应；总之是个技术活。
 
-export ZEPHYR_SDK_INSTALL_DIR=~/zephyr-sdk-0.16.5
-
-# 验证 应该输出： /home/codespace/zephyr-sdk-0.16.5
-echo $ZEPHYR_SDK_INSTALL_DIR
-
-# 注册 Zephyr SDK
-west zephyr-export
-
-# 安装 ninja-build
-sudo apt update && sudo apt install -y ninja-build
-
-#
-/usr/local/py-utils/venvs/west/bin/python -m pip install -r /workspaces/zephyr/scripts/requirements.txt
-
-# 
-cd /workspaces/zmk
-
-# 7. 更新所有源码和模块
-west update
-
-# 初始化 west（把当前仓库当作 zmk-config）
-west init -l
-
-# 正式编译命令
-west build -s app -b nice_nano -p -- -DSHIELD=pad15 -DZMK_CONFIG="/workspaces/pad15/config"
-```
+# 外壳的设计和组装
+通过SolidWorks设计外壳；还在设计中；
