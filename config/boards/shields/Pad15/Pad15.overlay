@@ -78,16 +78,32 @@
 	};
 };
 
-
+/* 用 nRF52840 内置 VDDH 传感器检测电量 */
 / {
     chosen {
-        zmk,battery = &vbatt;   /* 告诉 ZMK 用这个电池传感器 */
+        zmk,battery = &vbatt;   
     };
 
     vbatt: vbatt {
-        compatible = "zmk,battery-nrf-vddh";   /* 关键！用 nRF52840 内置 VDDH 传感器 */
+        compatible = "zmk,battery-nrf-vddh";
         label = "BATTERY";
     };
 };
 
 
+/ {
+    encoders {
+        compatible = "zmk,keymap-sensors";
+        sensors = <&ec11_encoder>;
+        triggers-per-rotation = <30>;   /* 通常和 steps 保持一致，EC11 常见值 */
+    };
+
+    ec11_encoder: ec11_encoder {
+        compatible = "alps,ec11";
+        label = "EC11";
+        a-gpios = <&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;   /* ← 这里改成你实际接的 A 脚 */
+        b-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;   /* ← 这里改成你实际接的 B 脚 */
+        steps = <30>;          /* EC11 常见 30 步/圈（有些是 20 或 80），先用 30 */
+        status = "okay";
+    };
+};
