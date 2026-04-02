@@ -66,7 +66,7 @@
 
         function {
             bindings = <
-                &rgb_ug RGB_TOG  &bl BL_INC  &bl BL_DEC  &kp C_MUTE
+                &rgb_ug RGB_TOG  &rgb_ug RGB_EFF  &kp K_LOCK  &kp C_MUTE
                 &kp F7      &kp F8      &kp F9      &mkp LCLK
                 &kp F4      &kp F5      &kp F6      &none
                 &kp F1      &kp F2      &kp F3      &none
@@ -76,11 +76,11 @@
 
         game {
             bindings = <
-                &kp K_LOCK  &kp C_PREVIOUS  &kp C_NEXT    &kp C_MUTE
-                &trans      &kp UP        &trans   &trans
-                &kp LEFT    &kp DOWN    &kp RIGHT   &none
-                &kp LEFT_SHIFT   &trans      &kp LALT    &none
-                &kp LCTRL      &trans      &kp SPACE   &none
+                &kp PAUSE_BREAK      &kp C_PREVIOUS     &kp C_NEXT      &kp C_MUTE
+                &none           &kp UP             &none           &none
+                &kp LEFT        &kp DOWN           &kp RIGHT       &none
+                &kp LEFT_SHIFT  &none              &kp LALT        &none
+                &kp LCTRL       &none              &kp SPACE       &none
             >;
         };
         /* === ZMK Studio 必须的保留层 === */
