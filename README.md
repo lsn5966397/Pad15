@@ -1,4 +1,4 @@
-# pad15
+# Pad15
 这是一个带有旋钮、摇杆和触摸板的有线蓝牙双模多功能小键盘项目，基于ZMK框架v0.3版本开发。
 
 This is a wireless dual-mode multifunction mini-keyboard project with EC11 knob XBOX joystick and a 4 channels touchpad. Coding based on ZMK firmware v0.3.
@@ -15,16 +15,16 @@ This is a wireless dual-mode multifunction mini-keyboard project with EC11 knob 
 ```
 pad15/       ← 项目根目录
 ├── config/
-│   ├── pad15.json
+│   ├── Pad15.json
 │   ├── west.yml
 │   └── boards/shields/pad15/
 │       ├── Kconfig.defconfig
 │       ├── Kconfig.shield
-│       ├── pad15.keymap
-│       ├── pad15.zmk.yml
-│       ├── pad15.dtsi
-│       ├── pad15.conf
-│       └── pad15.overlay
+│       ├── Pad15.keymap
+│       ├── Pad15.zmk.yml
+│       ├── Pad15.dtsi
+│       ├── Pad15.conf
+│       └── Pad15.overlay
 └── README.md
 ```
 这里建议项目名称用小写，因为在`Kconfig.shield` 中需定义大写的项目名称，其余各处均可使用小写，都用大写可能会导致混乱（比如不小心把该大写的也改成小写了）。
