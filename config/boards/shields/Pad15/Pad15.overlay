@@ -101,8 +101,8 @@
     ec11_encoder: ec11_encoder {
         compatible = "alps,ec11";
         label = "EC11";
-        a-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;   /* ← 这里改成你实际接的 A 脚 */
-        b-gpios = <&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;   /* ← 这里改成你实际接的 B 脚 */
+        a-gpios = <&gpio1 4 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;   /* ← 这里改成你实际接的 A 脚 */
+        b-gpios = <&gpio1 6 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;   /* ← 这里改成你实际接的 B 脚 */
         steps = <20>;          /* EC11 常见 30 步/圈（有些是 20 或 80），先用 30 */
         status = "okay";
     };
