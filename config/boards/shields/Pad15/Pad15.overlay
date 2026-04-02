@@ -90,19 +90,19 @@
     };
 };
 
-/* 这里的 ec11_encoder 节点名要和下面对应 */
+/* ec11_encoder */
 / {
     ec11_encoder: ec11_encoder {
         compatible = "alps,ec11";
         a-gpios = <&gpio1 4 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>; 
         b-gpios = <&gpio1 6 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>; 
-        steps = <20>; /* 如果旋转一格触发好几次，改回 20 或 40 */
+        steps = <80>; /* 如果旋转一格触发好几次，改回 20 或 40 */
         status = "okay";
     };
 
     sensors {
         compatible = "zmk,keymap-sensors";
         sensors = <&ec11_encoder>;
-        triggers-per-rotation = <20>; 
+        triggers-per-rotation = <80>; 
     };
 };
