@@ -10,7 +10,7 @@
     /* 1. 物理布局（visualizer 用） */
     layout: layout {
         compatible = "zmk,physical-layout";
-        display-name = "pad15";
+        display-name = "Pad15";
         transform = <&transform>;
         kscan = <&kscan0>;               
 
