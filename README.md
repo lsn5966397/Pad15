@@ -43,7 +43,7 @@ overlay 在这里描述设备的配置和矩阵网络形状，还有MCU引脚配
 扫描频率开太低导致的，在overlay文件中设置灯珠的扫描频率`spi-max-frequency = <3000000>;`就可以纵享丝滑
 
 3、切换层怎么设置好
-
+&to 设置两个相邻且不经常按到的键，避免误触又方便，延迟调到150ms
 
 ## zmk keymap editor工具
 https://nickcoutsos.github.io/keymap-editor/
