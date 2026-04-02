@@ -76,7 +76,7 @@
 
         game {
             bindings = <
-                &kp K_LOCK  &trans        &trans    &kp C_MUTE
+                &kp K_LOCK  &kp C_PREVIOUS  &kp C_NEXT    &kp C_MUTE
                 &trans      &kp UP        &trans   &trans
                 &kp LEFT    &kp DOWN    &kp RIGHT   &none
                 &kp LEFT_SHIFT   &trans      &kp LALT    &none
