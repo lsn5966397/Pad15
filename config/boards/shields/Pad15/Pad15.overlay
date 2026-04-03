@@ -2,6 +2,7 @@
 #include <dt-bindings/led/led.h>
 #include <dt-bindings/pinctrl/nrf-pinctrl.h>
 #include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <zephyr/dt-bindings/adc/adc.h>
 #include "Pad15.dtsi"
 
 /{
@@ -109,8 +110,30 @@
 
 /* 开启主控的 ADC 节点 */
 &adc {
-    compatible = "nordic,nrf-saadc";
     status = "okay";
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    /* 定义摇杆 Y 轴使用的 ADC0 (对应物理引脚 P0.02) */
+    channel@0 {
+        reg = <0>;
+        /* 使用 1/6 增益和内部 0.6V 基准，这能让 ADC 测量最高 3.6V 的电压，完美适配 3.3V 的摇杆 */
+        zephyr,gain = "ADC_GAIN_1_6";
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+        zephyr,resolution = <12>; /* 12位精度，把电压切分成 4096 份 */
+        zephyr,input-positive = <NRF_SAADC_AIN0>;
+    };
+
+    /* 定义摇杆 X 轴使用的 ADC5 (对应物理引脚 P0.29) */
+    channel@5 {
+        reg = <5>;
+        zephyr,gain = "ADC_GAIN_1_6";
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+        zephyr,resolution = <12>;
+        zephyr,input-positive = <NRF_SAADC_AIN5>;
+    };
 };
 
 /* 霍尔摇杆 → 鼠标指针 */
