@@ -32,10 +32,10 @@
     touch_kscan: kscan_touch {
         compatible = "zmk,kscan-gpio-direct";
         label = "TOUCH_BAR";
-        input-gpios = <&gpio0 17 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
-					<&gpio0 20 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
-					<&gpio0 22 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
-					<&gpio0 24 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        input-gpios = <&gpio0 17 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
+					<&gpio0 20 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
+					<&gpio0 22 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
+					<&gpio0 24 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
     };
 
     /* 2. 矩阵转换 */
