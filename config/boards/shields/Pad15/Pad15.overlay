@@ -32,8 +32,8 @@
     touch_kscan: kscan_touch {
         compatible = "zmk,kscan-gpio-direct";
         label = "TOUCH_BAR";
-        input-gpios = <&gpio1 06 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
-					<&gpio1 04 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
+        input-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
+					<&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
 					<&gpio0 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
 					<&gpio1 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
     };
@@ -121,7 +121,7 @@
     ec11_encoder: ec11_encoder {
         compatible = "alps,ec11";
         a-gpios = <&gpio0 22 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>; 
-        b-gpios = <&gpio0 09 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>; 
+        b-gpios = <&gpio0 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>; 
         steps = <80>; /* 如果旋转一格触发好几次，改回 20 或 40 */
         status = "okay";
     };
