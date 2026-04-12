@@ -1,0 +1,5 @@
+config ZMK_CUSTOM_LED
+    bool "Pad15 自定义灯效模块"
+    default y
+    help
+      启用自定义 underglow 灯效线程（支持层指示、电池状态、休眠省电、效果切换等）。
