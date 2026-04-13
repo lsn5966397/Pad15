@@ -57,9 +57,10 @@ static struct led_rgb wheel(uint8_t pos) {
 // 2. 核心动画渲染线程
 // ==========================================
 void custom_led_thread_main(void) {
-    if (!device_is_ready(led_strip)) return;
-
-    uint32_t tick = 0; 
+    if (!device_is_ready(led_strip)) {
+        printk("Custom LED: WS2812 strip not ready!\n");
+        return;   // 直接退出线程
+    } 
 
     while (1) {
         // 【核心新增】：如果键盘休眠了，直接全黑并大幅降低线程频率省电
