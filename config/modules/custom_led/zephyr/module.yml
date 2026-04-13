@@ -2,4 +2,4 @@ name: custom_led
 
 build:
   cmake: "true"  
-  kconfig: "true"
+  kconfig: "kconfig"
