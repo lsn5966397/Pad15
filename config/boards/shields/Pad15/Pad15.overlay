@@ -29,7 +29,6 @@
     /* ==================== 触摸条（4 个独立触摸键）==================== */
     touch_kscan: kscan_touch {
         compatible = "zmk,kscan-gpio-direct";
-        label = "TOUCH_BAR";
         input-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
 					<&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
 					<&gpio0 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
@@ -39,7 +38,6 @@
 	/* --- 将上面两个打包成复合 Kscan --- */
     kscan_combo: kscan_combo {
         compatible = "zmk,kscan-composite";
-        label = "KSCAN_COMBO";
         rows = <6>;    /* 键盘5行 + 触摸板虚拟1行 = 6行 */
         columns = <4>; 	/* 由于触摸板在电气上依然占0~3列，所以最大列距保留4即可 */
 
