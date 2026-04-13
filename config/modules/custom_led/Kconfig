@@ -1,8 +1,10 @@
 menu "Custom LED Module"
 
 config CUSTOM_LED
-    bool "Enable custom LED driver"
+    bool "Enable custom WS2812 LED animation for Pad15"
     default y
+    select LED_STRIP
+    select LED_STRIP_WS2812_SPI   # 关键！拉入 WS2812-SPI 驱动
     help
       启用自定义 underglow 灯效线程（支持层指示、电池状态、休眠省电、效果切换等）。
 
