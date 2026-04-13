@@ -3,7 +3,6 @@ include:
   - board: nice_nano
     shield: Pad15
     snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_STUDIO=y
-    cmake-args: -DZMK_EXTRA_MODULES="/workspace/config/modules/custom_led"
+    cmake-args: -DCONFIG_ZMK_STUDIO=y -DZMK_EXTRA_MODULES="/workspace/config/modules/custom_led"
   - board: nice_nano
     shield: settings_reset
