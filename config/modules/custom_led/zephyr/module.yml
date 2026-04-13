@@ -1,3 +1,5 @@
 name: custom_led
 build:
   cmake: .
+  kconfig: "Kconfig"   # ← 必须指向你刚创建的 Kconfig 文件
+
