@@ -8,6 +8,7 @@
     chosen {
 	zmk,kscan = &kscan0;
 	zmk,physical-layout = &layout;
+	zephyr,console = &uart0;     /* 必须加上这一行 */
 };
 
 
@@ -156,4 +157,8 @@
             report-on-change-only;
         };
     };
+};
+
+&uart0 {
+    status = "okay";                 /* 确保 UART 被启用 */
 };
