@@ -11,7 +11,7 @@
 #include <zmk/events/activity_state_changed.h> 
 #include <zmk/activity.h> 
 
-#define STRIP_NODE DT_CHOSEN(zmk_underglow)
+#define STRIP_NODE DT_NODELABEL(pad15_leds)
 #define NUM_PIXELS 16
 #define STATUS_LED_IDX 15
 #define MAX_EFFECTS 3
