@@ -1,19 +1,26 @@
+/* =========================================================================
+ * Pad15 包含：按键矩阵、触摸条、物理布局、LED、摇杆、编码器、电池检测
+ * ========================================================================= */
+
+#include <physical_layouts.dtsi>
 #include <dt-bindings/zmk/matrix_transform.h>
+#include <dt-bindings/led/led.h>
 #include <dt-bindings/pinctrl/nrf-pinctrl.h>
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 #include <zephyr/dt-bindings/adc/adc.h>
-#include "Pad15.dtsi"
 
-/{
+/ {
+    /* 1. 全局大脑：指派核心组件 */
     chosen {
-	zmk,kscan = &kscan0;
-	zmk,physical-layout = &layout;
-	zmk,underglow = &pad15_leds;
-	zephyr,console = &uart0;
-};
+        zmk,kscan = &kscan_combo;              /* 指向 combo */
+        zmk,physical-layout = &layout;         /* 指向物理布局 */
+        zmk,matrix-transform = &transform;     /* 指向矩阵转换 */
+        zmk,underglow = &pad15_leds;
+        zmk,battery = &vbatt;
+        zephyr,console = &uart0;
+    };
 
-
-    /* 3. 复合 kscan */
+    /* 2. 硬件扫描器定义 */
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
         diode-direction = "col2row";
@@ -28,65 +35,93 @@
                     <&gpio0 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
     };
 
-    /* ==================== 触摸条（4 个独立触摸键）==================== */
     touch_kscan: kscan_touch {
         compatible = "zmk,kscan-gpio-direct";
         input-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
-					<&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
-					<&gpio0 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
-					<&gpio1 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+                      <&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
+                      <&gpio0 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
+                      <&gpio1 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
     };
 
-	/* --- 将上面两个打包成复合 Kscan --- */
     kscan_combo: kscan_combo {
         compatible = "zmk,kscan-composite";
-        rows = <6>;    /* 键盘5行 + 触摸板虚拟1行 = 6行 */
-        columns = <4>; 	/* 由于触摸板在电气上依然占0~3列，所以最大列距保留4即可 */
-
+        rows = <6>;
+        columns = <4>;
         matrix {
             kscan = <&kscan0>;
         };
-
         touch {
             kscan = <&touch_kscan>;
-            row-offset = <5>; /* 把触摸条的 4 个按键，映射为虚拟的第 6 行（索引5） */
+            row-offset = <5>; 
         };
     };
-    /* 2. 矩阵转换 */
-	transform: matrix_transform {
-		compatible = "zmk,matrix-transform";
-		rows = <6>;
-		columns = <4>;	/* 视觉排布上，你有5列 */
-		map = <
-            RC(0,0) RC(0,1) RC(0,2) RC(0,3)	/* 第一排 */
-            RC(1,0) RC(1,1) RC(1,2) RC(1,3)	/* 第二排 */
-            RC(2,0) RC(2,1) RC(2,2) RC(2,3)	/* 第三排 */
-            RC(3,0) RC(3,1) RC(3,2) RC(3,3)	/* 第四排 */
-            RC(4,0) RC(4,1) RC(4,2) RC(4,3)	/* 第五排 */
-            RC(5,0) RC(5,1) RC(5,2) RC(5,3)	/* 第六行 = 触摸条 4 个键 */
-		>;
-	};
 
-};
-
-/* 用 nRF52840 内置 VDDH 传感器检测电量 */
-/ {
-    chosen {
-        zmk,battery = &vbatt;   
+    /* 3. 逻辑映射转换 (6x4 = 24键) */
+    transform: matrix_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <6>;
+        columns = <4>;
+        map = <
+            RC(0,0) RC(0,1) RC(0,2) RC(0,3)
+            RC(1,0) RC(1,1) RC(1,2) RC(1,3)
+            RC(2,0) RC(2,1) RC(2,2) RC(2,3)		/* 最右侧按键充数 */
+            RC(3,0) RC(3,1) RC(3,2) RC(3,3)		/* 最右侧按键充数 */
+            RC(4,0) RC(4,1) RC(4,2) RC(4,3)		/* 最右侧按键充数 */
+            RC(5,0) RC(5,1) RC(5,2) RC(5,3)
+    		/* 最后一行作为触摸板按键 */
+        >;
     };
 
+    /* 4. ZMK Studio 物理坐标 (必须严格填满 24 个坐标，缺一不可！) */
+    layout: layout {
+        compatible = "zmk,physical-layout";
+        display-name = "Pad15";
+        transform = <&transform>;
+        kscan = <&kscan_combo>;                
+        keys = <
+            /* 第一排 */
+            &key_physical_attrs 100 100   0   0   0 0 0
+            &key_physical_attrs 100 100 100   0   0 0 0
+            &key_physical_attrs 100 100 200   0   0 0 0
+            &key_physical_attrs 100 100 300   0   0 0 0
+            /* 第二排 */
+            &key_physical_attrs 100 100   0 100   0 0 0
+            &key_physical_attrs 100 100 100 100   0 0 0
+            &key_physical_attrs 100 100 200 100   0 0 0
+            &key_physical_attrs 100 100 300 100   0 0 0
+            /* 第三排 */
+            &key_physical_attrs 100 100   0 200   0 0 0
+            &key_physical_attrs 100 100 100 200   0 0 0
+            &key_physical_attrs 100 100 200 200   0 0 0
+            &key_physical_attrs 100 100 300 200   0 0 0
+            /* 第四排 */
+            &key_physical_attrs 100 100   0 300   0 0 0
+            &key_physical_attrs 100 100 100 300   0 0 0
+            &key_physical_attrs 100 100 200 300   0 0 0
+            &key_physical_attrs 100 100 300 300   0 0 0
+            /* 第五排 */
+            &key_physical_attrs 100 100   0 400   0 0 0
+            &key_physical_attrs 100 100 100 400   0 0 0
+            &key_physical_attrs 100 100 200 400   0 0 0
+            &key_physical_attrs 100 100 300 400   0 0 0
+            /* 第六排 */
+            &key_physical_attrs 100 100   0 500   0 0 0
+            &key_physical_attrs 100 100 100 500   0 0 0
+            &key_physical_attrs 100 100 200 500   0 0 0
+            &key_physical_attrs 100 100 300 500   0 0 0
+        >;
+    };
+
+    /* 5. 电池与传感器节点 */
     vbatt: vbatt {
         compatible = "zmk,battery-nrf-vddh";
     };
-};
 
-/* ec11_encoder */
-/ {
     ec11_encoder: ec11_encoder {
         compatible = "alps,ec11";
         a-gpios = <&gpio0 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>; 
         b-gpios = <&gpio0 22 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>; 
-        steps = <80>; /* 如果旋转一格触发好几次，改回 20 或 40 */
+        steps = <80>; 
         status = "okay";
     };
 
@@ -95,26 +130,101 @@
         sensors = <&ec11_encoder>;
         triggers-per-rotation = <80>; 
     };
+
+    joystick: analog_joystick {
+        compatible = "zmk,pointing-analog-joystick";
+        sampling-hz = <100>;
+        x-ch {
+            io-channels = <&adc 5>;
+            mv-mid = <1650>;
+            mv-min-max = <1600>;
+            mv-deadzone = <10>;
+            scale-multiplier = <1>;
+            scale-divisor = <60>;
+            invert; 
+            evt-type = <INPUT_EV_REL>;
+            input-code = <INPUT_REL_X>;
+        };
+        y-ch {
+            io-channels = <&adc 0>;
+            mv-mid = <1650>;
+            mv-min-max = <1600>;
+            mv-deadzone = <10>;
+            scale-multiplier = <1>;
+            scale-divisor = <60>;
+            invert; 
+            evt-type = <INPUT_EV_REL>;
+            input-code = <INPUT_REL_Y>;
+            report-on-change-only;
+        };
+    };
 };
 
-/* 开启主控的 ADC 节点 */
+/* =========================================================================
+ * 芯片外设引用区 (引脚控制、SPI、ADC、UART)
+ * ========================================================================= */
+&pinctrl {
+    spi3_default: spi3_default {
+        group1 {
+            psels = <NRF_PSEL(SPIM_MOSI, 0, 24)>;
+        };
+    };
+    spi3_sleep: spi3_sleep {
+        group1 {
+            psels = <NRF_PSEL(SPIM_MOSI, 0, 24)>;
+            low-power-enable;
+        };
+    };
+};
+
+&spi3 {
+    compatible = "nordic,nrf-spim";
+    status = "okay";
+    pinctrl-0 = <&spi3_default>;
+    pinctrl-1 = <&spi3_sleep>;
+    pinctrl-names = "default", "sleep";
+
+    pad15_leds: ws2812@0 {
+        compatible = "worldsemi,ws2812-spi";
+        reg = <0>;
+        status = "okay";
+        spi-max-frequency = <3000000>;
+        chain-length = <16>;
+        spi-one-frame = <0x70>;
+        spi-zero-frame = <0x40>;
+        color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
+        
+        led0: led_0 { x = <0>;   y = <0>; };
+        led1: led_1 { x = <10>; y = <0>; };
+        led2: led_2 { x = <20>; y = <0>; };
+        led3: led_3 { x = <0>;   y = <10>; };
+        led4: led_4 { x = <10>; y = <10>; };
+        led5: led_5 { x = <20>; y = <10>; };
+        led6: led_6 { x = <0>;   y = <20>; };
+        led7: led_7 { x = <10>; y = <20>; };
+        led8: led_8 { x = <20>; y = <20>; };
+        led15: led_15 { x = <30>; y = <20>; };
+        led9:  led_9  { x = <0>;   y = <30>; };
+        led10: led_10 { x = <10>; y = <30>; };
+        led11: led_11 { x = <20>; y = <30>; };
+        led12: led_12 { x = <0>;   y = <40>; };
+        led13: led_13 { x = <10>; y = <40>; };
+        led14: led_14 { x = <20>; y = <40>; };
+    };
+};
+
 &adc {
     status = "okay";
     #address-cells = <1>;
     #size-cells = <0>;
-
-    /* 定义摇杆 Y 轴使用的 ADC0 (对应物理引脚 P0.02) */
     channel@0 {
         reg = <0>;
-        /* 使用 1/6 增益和内部 0.6V 基准，这能让 ADC 测量最高 3.6V 的电压，完美适配 3.3V 的摇杆 */
         zephyr,gain = "ADC_GAIN_1_6";
         zephyr,reference = "ADC_REF_INTERNAL";
         zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
-        zephyr,resolution = <12>; /* 12位精度，把电压切分成 4096 份 */
+        zephyr,resolution = <12>; 
         zephyr,input-positive = <NRF_SAADC_AIN0>;
     };
-
-    /* 定义摇杆 X 轴使用的 ADC5 (对应物理引脚 P0.29) */
     channel@5 {
         reg = <5>;
         zephyr,gain = "ADC_GAIN_1_6";
@@ -125,42 +235,6 @@
     };
 };
 
-/* 霍尔摇杆 → 鼠标指针 */
-/ {
-    joystick: analog_joystick {
-        compatible = "zmk,pointing-analog-joystick";
-        sampling-hz = <100>;
-
-        /* 配置 X 轴对应的 ADC 通道 */
-        x-ch {
-            io-channels = <&adc 5>;
-            mv-mid = <1650>;
-            mv-min-max = <1600>;
-        	/* 摇杆盲区 (Deadzone)，防止手松开时鼠标自己飘 */
-        	/* 值范围通常是 0-100 或根据具体驱动设定的阈值，建议先给个 10 测试 */
-            mv-deadzone = <10>;
-            scale-multiplier = <1>;
-            scale-divisor = <60>;
-        	invert; /* 如果发现左右反了，取消注释这行；或者加这行来反转 */
-            evt-type = <INPUT_EV_REL>;
-            input-code = <INPUT_REL_X>;
-        };
-        /* 配置 Y 轴对应的 ADC 通道 */
-        y-ch {
-            io-channels = <&adc 0>;
-            mv-mid = <1650>;
-            mv-min-max = <1600>;
-            mv-deadzone = <10>;
-            scale-multiplier = <1>;
-            scale-divisor = <60>;
-        	invert; /* 如果发现上下反了，用这个反转 */
-            evt-type = <INPUT_EV_REL>;
-            input-code = <INPUT_REL_Y>;
-            report-on-change-only;
-        };
-    };
-};
-
 &uart0 {
-    status = "okay";                 /* 确保 UART 被启用 */
+    status = "okay";
 };
