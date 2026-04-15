@@ -21,7 +21,7 @@
 
         studio_unlock {
             bindings = <&studio_unlock>;
-            key-positions = <14 15>; 
+            key-positions = <16 17>; 
             timeout-ms = <150>;
         };
 
@@ -47,12 +47,12 @@
         };
         BOOTLOADER {
             bindings = <&bootloader>;
-            key-positions = <0 2 14>;
+            key-positions = <0 2 16>;
             timeout-ms = <200>;
         };
         BTCLR {
             bindings = <&bt BT_CLR>;
-            key-positions = <2 14>;
+            key-positions = <2 16>;
             timeout-ms = <200>;
         };
     };
