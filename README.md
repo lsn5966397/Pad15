@@ -57,7 +57,7 @@ overlay 在这里描述设备的配置和矩阵网络形状，还有MCU引脚配
 
 2、 LED灯闪烁
 
-扫描频率开太低导致的，在overlay文件中设置灯珠的扫描频率`spi-max-frequency = <4000000>;`标准 WS2812 需要 800 kHz 的数据传输率。nRF52840 没有专用的 WS2812 硬件控制器，ZMK 是用 SPI 外设来“欺骗” WS2812 的。ZMK 通常用 5 个 SPI 的 bit 来拼凑成 1 个 WS2812 的 bit，$800 \text{ kHz} \times 5 = 4000 \text{ kHz} = 4 \text{ MHz}$。
+扫描频率开太低导致的，在overlay文件中设置灯珠的扫描频率`spi-max-frequency = <4000000>;`标准 WS2812 需要 800 kHz 的数据传输率。nRF52840 没有专用的 WS2812 硬件控制器，ZMK 是用 SPI 外设来“欺骗” WS2812 的。ZMK 通常用 5 个 SPI 的 bit 来拼凑成 1 个 WS2812 的 bit， $800 \text{ kHz} \times 5 = 4000 \text{ kHz} = 4 \text{ MHz}$ 。
 
 3、切换层怎么设置好
 
