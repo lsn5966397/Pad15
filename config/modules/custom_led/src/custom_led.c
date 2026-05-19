@@ -1,31 +1,30 @@
-#include <zephyr/kernel.h>                 // 引入 Zephyr 操作系统内核 API (提供多线程、延时等功能)
-#include <zephyr/device.h>                 // 引入设备驱动模型 API
-#include <zephyr/drivers/led_strip.h>      // 引入 LED 灯带的标准驱动接口
-#include <stdlib.h>                        // 引入 C 标准库 (提供绝对值 abs() 等数学函数)
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/led_strip.h>
+#include <stdlib.h>
 
-#include <zmk/event_manager.h>             // 引入 ZMK 的事件管理器 (用于监听键盘状态)
-#include <zmk/events/layer_state_changed.h>// 引入键盘层 (Layer) 切换事件
-#include <zmk/events/battery_state_changed.h>// 引入电池电量变化事件
-#include <zmk/events/keycode_state_changed.h>// 引入按键按下/抬起事件
-#include <zmk/events/activity_state_changed.h>// 引入键盘活动状态 (活跃/休眠) 事件
-#include <zmk/activity.h>                  // 引入活动状态相关的定义
-#include <zmk/keymap.h>                    // ZMK 核心键盘层 API，获取准确的层状态
+#include <zmk/event_manager.h>
+#include <zmk/events/layer_state_changed.h>
+#include <zmk/events/battery_state_changed.h>
+#include <zmk/events/keycode_state_changed.h>
+#include <zmk/events/activity_state_changed.h>
+#include <zmk/activity.h>
+#include <zmk/keymap.h>
 
-#define STRIP_NODE DT_NODELABEL(pad15_leds)// 通过设备树标签 (pad15_leds) 获取硬件节点宏
-#define NUM_PIXELS 16                      // 定义键盘上总共的灯珠数量 (15个矩阵灯 + 1个状态灯)
-#define STATUS_LED_IDX 15                  // 定义状态灯在数组中的索引位置 (由于从0开始，第16颗就是索引15)
-#define MAX_EFFECTS 2                      // 定义最大灯效数量 (0: 横向波浪, 1: 纵向波浪)
-#define BRIGHTNESS_PERCENT 30              // 定义全局最高亮度百分比 (30%)，防止刺眼和耗电过大
+#define STRIP_NODE DT_NODELABEL(pad15_leds)
+#define NUM_PIXELS 16
+#define STATUS_LED_IDX 15
+#define MAX_EFFECTS 4                      // 【修改】扩展到4种灯效
+#define BRIGHTNESS_PERCENT 30              
 
-static const struct device *led_strip = DEVICE_DT_GET(STRIP_NODE); // 在初始化时获取 WS2812 的设备句柄
-static struct led_rgb pixels[NUM_PIXELS];  // 定义一个 RGB 结构体数组，用来暂存每一颗灯珠的颜色数据
+static const struct device *led_strip = DEVICE_DT_GET(STRIP_NODE);
+static struct led_rgb pixels[NUM_PIXELS];
 
 // 状态全局变量
-static uint8_t current_layer = 0;          // 记录当前处于键盘的第几层 (默认第 0 层)
-static uint8_t battery_level = 100;        // 记录当前的电池电量 (默认 100%)
-static int status_display_frames = 66;      // 记录状态灯应该亮起的持续帧数 (用于切换层时短暂显示颜色)
-static uint8_t current_effect = 0;         // 记录当前的灯光效果模式 (默认效果 0)
-static bool is_awake = true;               // 记录键盘是否处于唤醒状态 (默认开机是唤醒的)
+static uint8_t battery_level = 100;
+static int status_display_frames = 66;     
+static uint8_t current_effect = 3;         // 【修改】默认开机展示效果3 (ZMK幻彩灯效4)
+static bool is_awake = true;
         
 struct led_coord {
     uint8_t x;
@@ -42,17 +41,26 @@ static const struct led_coord coords[NUM_PIXELS] = {
 };
 
 // ==========================================
-// 完美无缝的 HSV 彩虹色轮函数 (赤橙黄绿青蓝紫)
+// 【新增】真正的 HSV 到 RGB 转换引擎
+// 原理：通过 Hue(色相 0-255) 映射完整的赤橙黄绿青蓝紫光谱
 // ==========================================
-static struct led_rgb wheel(uint8_t pos) {
-    if (pos < 85) {
-        return (struct led_rgb){255 - pos * 3, pos * 3, 0}; 
-    } else if (pos < 170) {
-        pos -= 85; 
-        return (struct led_rgb){0, 255 - pos * 3, pos * 3};
-    } else {
-        pos -= 170; 
-        return (struct led_rgb){pos * 3, 0, 255 - pos * 3};
+static struct led_rgb hsv_to_rgb(uint8_t h, uint8_t s, uint8_t v) {
+    if (s == 0) return (struct led_rgb){v, v, v};
+
+    uint8_t region = h / 43;
+    uint8_t remainder = (h - (region * 43)) * 6;
+
+    uint8_t p = (v * (255 - s)) >> 8;
+    uint8_t q = (v * (255 - ((s * remainder) >> 8))) >> 8;
+    uint8_t t = (v * (255 - ((s * (255 - remainder)) >> 8))) >> 8;
+
+    switch (region) {
+        case 0: return (struct led_rgb){v, t, p};
+        case 1: return (struct led_rgb){q, v, p};
+        case 2: return (struct led_rgb){p, v, t};
+        case 3: return (struct led_rgb){p, q, v};
+        case 4: return (struct led_rgb){t, p, v};
+        default: return (struct led_rgb){v, p, q};
     }
 }
 
@@ -82,36 +90,55 @@ void custom_led_thread_main(void) {
             uint8_t cy = coords[i].y;
 
             if (current_effect == 0) {
-                // 效果 0：全局呼吸渐变 (所有灯同一个颜色，按赤橙黄绿青蓝紫循环)
-                pixels[i] = wheel((uint8_t)(tick * 2)); 
+                // 效果 0：全局呼吸渐变
+                pixels[i] = hsv_to_rgb((uint8_t)(tick * 2), 255, 255); 
             } 
             else if (current_effect == 1) {
-                // 效果 1：横向幻彩波浪 (纯数学空间相位叠加，绝对无缝)
-                pixels[i] = wheel((uint8_t)((tick * 3) + (cx * 4)));
+                // 效果 1：横向幻彩波浪
+                pixels[i] = hsv_to_rgb((uint8_t)(tick * 3 - cx * 4), 255, 255);
             }
             else if (current_effect == 2) {
-                // 效果 2：纵向幻彩波浪 (从上往下如瀑布般流动)
-                pixels[i] = wheel((uint8_t)((tick * 3) + (cy * 4)));
+                // 效果 2：纵向幻彩波浪 (如瀑布)
+                pixels[i] = hsv_to_rgb((uint8_t)(tick * 3 - cy * 4), 255, 255);
+            }
+            else if (current_effect == 3) {
+                // 【新增】效果 3：完美复刻 ZMK Effect 4 (Swirl对角线幻彩漩涡)
+                pixels[i] = hsv_to_rgb((uint8_t)(tick * 3 - cx * 3 - cy * 3), 255, 255);
             }
         }
 
         // --- 2. 渲染第 16 颗状态灯 ---
-        // 优先级 1：低电量红色闪烁报警 (低于 10%)
-        if (battery_level < 10) {
+        // 【关键修复】：增加 battery_level > 0 的判断。防止无电池状态(0%)一直报错覆盖层颜色
+        if (battery_level > 0 && battery_level < 10) {
             if (tick % 30 < 15) pixels[STATUS_LED_IDX] = (struct led_rgb){0xFF, 0x00, 0x00};
             else pixels[STATUS_LED_IDX] = (struct led_rgb){0, 0, 0};
         } 
         else if (status_display_frames > 0) {
             uint8_t active_layer = zmk_keymap_highest_layer_active();
 
+            // 【硬件级调色】：针对 WS2812 特调的颜色，抛弃屏幕HEX码
             switch (active_layer) {
-                case 0: pixels[STATUS_LED_IDX] = (struct led_rgb){0xFF, 0xC0, 0xCB}; break; // 第 0 层：粉色 
-                case 1: pixels[STATUS_LED_IDX] = (struct led_rgb){0xFF, 0x80, 0x00}; break; // 第 1 层：橙色 
-                case 2: pixels[STATUS_LED_IDX] = (struct led_rgb){0x00, 0xFF, 0x00}; break; // 第 2 层：绿色
-                case 3: pixels[STATUS_LED_IDX] = (struct led_rgb){0x00, 0xBF, 0xFF}; break; // 第 3 层：蓝色
-                default: pixels[STATUS_LED_IDX] = (struct led_rgb){0xFF, 0xFF, 0xFF}; break; // 其他层：白色 (RGB全开)
+                case 0: 
+                    // 特调粉色：红光拉满，混入少量蓝光制造紫粉调，极少绿光防白化
+                    pixels[STATUS_LED_IDX] = (struct led_rgb){0xFF, 0x14, 0x64}; 
+                    break; 
+                case 1: 
+                    // 特调橙色：红光拉满，绿光压低到十分之一，杜绝发黄
+                    pixels[STATUS_LED_IDX] = (struct led_rgb){0xFF, 0x2A, 0x00}; 
+                    break; 
+                case 2: 
+                    // 标准绿色
+                    pixels[STATUS_LED_IDX] = (struct led_rgb){0x00, 0xFF, 0x00}; 
+                    break; 
+                case 3: 
+                    // 特调天蓝：防止偏暗，蓝绿混合
+                    pixels[STATUS_LED_IDX] = (struct led_rgb){0x00, 0x80, 0xFF}; 
+                    break; 
+                default: 
+                    pixels[STATUS_LED_IDX] = (struct led_rgb){0xFF, 0xFF, 0xFF}; 
+                    break; 
             }
-            status_display_frames--; // 倒计时递减
+            status_display_frames--; 
         } 
         else {
             pixels[STATUS_LED_IDX] = (struct led_rgb){0, 0, 0}; 
