@@ -24,7 +24,12 @@
             key-positions = <0 4>; 
             timeout-ms = <150>;
         };
-
+        BOOTLOADER {
+            bindings = <&delay_boot 0 0>;
+            key-positions = <0 2 16>;
+            layers = <0 1 2>;
+            timeout-ms = <150>;
+        };
         change_layer {
             bindings = <&to 0>;
             key-positions = <2 1>;
@@ -48,6 +53,7 @@
         BTCLR {
             bindings = <&bt BT_CLR>;
             key-positions = <2 16>;
+            layers = <0 1 2>;
             timeout-ms = <200>;
         };
     };
@@ -60,15 +66,12 @@
             #binding-cells = <2>;
             tapping-term-ms = <1500>;
         };
-        BOOTLOADER: bootloader {
+        delay_boot: delay_boot {
             compatible = "zmk,behavior-hold-tap";
-            label = "BOOTLOADER";
-            bindings = <&bootloader>, <&none>;
-
             #binding-cells = <2>;
-            tapping-term-ms = <3000>;
-            hold-trigger-key-positions = <0 2 16>;
-            quick-tap-ms = <100>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <3000>; 
+            bindings = <&bootloader>, <&none>; 
         };
     };
 
