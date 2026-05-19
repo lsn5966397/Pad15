@@ -198,29 +198,6 @@
 };
 
 &adc {
-    status = "okay";
-    #address-cells = <1>;
-    #size-cells = <0>;
-
-    channel@0 {
-        reg = <0>;
-        zephyr,gain = "ADC_GAIN_1_6";        // 放大倍率
-        zephyr,reference = "ADC_REF_INTERNAL"; // 内部基准电压
-        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
-        zephyr,input-positive = "SAADC_CH_PSELP_PSEL_AnalogInput0"; // AIN0 (P0.02)
-    };
-
-    channel@1 {
-        reg = <1>;
-        zephyr,gain = "ADC_GAIN_1_6";
-        zephyr,reference = "ADC_REF_INTERNAL";
-        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
-        zephyr,input-positive = "SAADC_CH_PSELP_PSEL_AnalogInput5"; // AIN1 (P0.03)
-    };
-};
-
-
-&adc {
 	status = "okay";
 };
 
