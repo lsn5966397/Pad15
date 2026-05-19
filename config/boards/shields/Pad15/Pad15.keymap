@@ -45,11 +45,6 @@
             timeout-ms = <150>;
             layers = <1>;
         };
-        BOOTLOADER {
-            bindings = <&bootloader>;
-            key-positions = <0 2 16>;
-            timeout-ms = <200>;
-        };
         BTCLR {
             bindings = <&bt BT_CLR>;
             key-positions = <2 16>;
@@ -64,6 +59,16 @@
             bindings = <&kp>, <&kp>;
             #binding-cells = <2>;
             tapping-term-ms = <1500>;
+        };
+        BOOTLOADER: bootloader {
+            compatible = "zmk,behavior-hold-tap";
+            label = "BOOTLOADER";
+            bindings = <&bootloader>, <&none>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <3000>;
+            hold-trigger-key-positions = <0 2 16>;
+            timeout-ms = <100>;
         };
     };
 
@@ -97,7 +102,7 @@
         game {
             bindings = <
                 &kp C_PLAY_PAUSE      &kp C_PREVIOUS     &kp C_NEXT      &kp C_MUTE
-                &none           &kp UP             &none           &mkp LCLK
+                &ext_power EP_ON           &kp UP             &none           &mkp LCLK
                 &kp LEFT        &kp DOWN           &kp RIGHT       &msc SCRL_UP
                 &kp LEFT_SHIFT  &none              &kp LALT        &msc SCRL_UP
                 &kp LCTRL       &none              &kp SPACE       &msc SCRL_DOWN
