@@ -209,7 +209,7 @@
             mv-deadzone = <10>;   
             /* 3. 调整缩放：分母（divisor）越大，鼠标移动越慢、越精准 */
             scale-multiplier = <1>;
-            scale-divisor = <10>; 
+            scale-divisor = <70>; 
             
             evt-type = <INPUT_EV_REL>;
             input-code = <INPUT_REL_X>;
@@ -225,8 +225,8 @@
             
             mv-deadzone = <10>;   
             
-            scale-multiplier = <3>;
-            scale-divisor = <4>; 
+            scale-multiplier = <1>;
+            scale-divisor = <60>; 
             
             evt-type = <INPUT_EV_REL>;
             input-code = <INPUT_REL_Y>;
