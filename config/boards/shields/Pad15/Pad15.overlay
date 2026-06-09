@@ -200,7 +200,7 @@
         sampling-hz = <100>;
         
         x-ch {
-            io-channels = <&adc 5>; 
+            io-channels = <&adc 0>; 
             /* 1. 中位电压：nRF52840 在 3.3V 供电下，理论中点在 1650 左右 */
             mv-mid = <1650>;      
             mv-min-max = <1400>;  /* 稍微改小，防止边缘推不到头 */
@@ -218,7 +218,7 @@
         };
         
         y-ch {
-            io-channels = <&adc 0>; 
+            io-channels = <&adc 5>; 
             
             mv-mid = <1650>;      
             mv-min-max = <1400>;  
