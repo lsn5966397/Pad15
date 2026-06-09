@@ -199,7 +199,7 @@
         compatible = "zmk,analog-input";
         sampling-hz = <100>;
         
-        x-ch {
+        y-ch {
             io-channels = <&adc 0>; 
             /* 1. 中位电压：nRF52840 在 3.3V 供电下，理论中点在 1650 左右 */
             mv-mid = <1500>;      
@@ -217,14 +217,14 @@
             report-on-change-only; 
         };
         
-        y-ch {
+        x-ch {
             io-channels = <&adc 5>; 
             
             mv-mid = <1500>;      
             mv-min-max = <1400>; 
             mv-deadzone = <50>;   
             
-            scale-multiplier = <1>;
+            scale-multiplier = <3>;
             scale-divisor = <70>; 
             
             evt-type = <INPUT_EV_REL>;
