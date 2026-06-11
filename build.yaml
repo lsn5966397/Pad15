@@ -1,6 +1,6 @@
 ---
 include:
-  - board: nice_nano
+  - board: nice_nano//zmk
     shield: Pad15
     snippet: studio-rpc-usb-uart
     cmake-args: >-
