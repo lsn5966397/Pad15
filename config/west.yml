@@ -13,10 +13,6 @@ manifest:
       remote: zmkfirmware
       revision: v0.3
       import: app/west.yml
-    # 引入模拟摇杆驱动模块
-    - name: zmk-analog-input-driver
-      remote: badjeff
-      revision: main
 
   self:
     path: config
