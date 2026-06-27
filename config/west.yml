@@ -1,15 +1,14 @@
 manifest:
   remotes:
-    # ZMK 官方主线仓库
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
-
+    - name: badjeff
+      url-base: https://github.com/badjeff
   projects:
-    # 引入 ZMK 官方核心组件
     - name: zmk
       remote: zmkfirmware
       revision: main
       import: app/west.yml
-
-  self:
-    path: config
+    - name: zmk-analog-input-driver
+      remote: badjeff
+      revision: main
