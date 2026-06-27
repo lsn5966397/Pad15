@@ -191,66 +191,51 @@
     };
 };
 
+
 &adc {
     status = "okay";
-    #address-cells = <1>;
-    #size-cells = <0>;
-
-    // 为 nRF52840 声明你的两个物理 ADC 通道
-    // 假设你的摇杆 X 轴接在 AIN0 (P0.02)，Y 轴接在 AIN5 (P0.29)
-    channel@0 {
-        reg = <0>;
-        zephyr,gain = "ADC_GAIN_1_6";            // 1/6 增益，配合内部基准可测量 0-3.6V 电压
-        zephyr,reference = "ADC_REF_INTERNAL";    // 使用内部 0.6V 绝对基准
-        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
-        zephyr,input-positive = <NRF_SAADC_AIN0>; 
-    };
-
-    channel@5 {
-        reg = <5>;
-        zephyr,gain = "ADC_GAIN_1_6";
-        zephyr,reference = "ADC_REF_INTERNAL";
-        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
-        zephyr,input-positive = <NRF_SAADC_AIN5>;
-    };
 };
 
 / {
-    // 1. 实例化 Zephyr 原生类比轴驱动（将 ADC 转化为标准的绝对轴事件）
-	joystick: joystick {
-	    compatible = "analog-axis";
-	    poll-period-ms = <12>;
-	
-	    axis_x {
-	        // 1. 【解决轴向颠倒】：如果此时左右拨动鼠标是上下走，直接把这里的 adc 0 换成 adc 5。
-	        io-channels = <&adc 0>; 
-	        zephyr,axis = <INPUT_ABS_X>;
-	        in-min = <100>;
-	        in-max = <4000>;
-	        in-deadzone = <150>; // 如果摇杆中位依然有漂移，继续增大这个数值
-	
-	        // 2. 【解决方向反转】：如果你向右拨，鼠标却向左走，不需要任何复杂代码。
-	        // 直接把 out-min 和 out-max 的正负值颠倒过来即可！
-	        out-min = <(-127)>;  // 如果反了，改成 <127>
-	        out-max = <127>;     // 如果反了，改成 <(-127)>
-	    };
-	
-	    axis_y {
-	        // 与 X 轴对应的另一个引脚
-	        io-channels = <&adc 5>; 
-	        zephyr,axis = <INPUT_ABS_Y>;
-	        in-min = <100>;
-	        in-max = <4000>;
-	        in-deadzone = <150>;
-	
-	        // 同样，如果上下方向反了，颠倒这两个正负值
-	        out-min = <(-127)>;
-	        out-max = <127>;
+    /* 2. 摇杆信号转换配置 */
+    joystick: analog_input_0 {
+        compatible = "zmk,analog-input";
+        sampling-hz = <100>; /* 轮询频率：100Hz，决定鼠标顺滑度 */
+
+        x-ch {
+            io-channels = <&adc 0>; /* X轴对应的 ADC 通道，请根据原理图修改 */
+            evt-type = <INPUT_EV_REL>; /* 转换为相对坐标事件 */
+            input-code = <INPUT_REL_X>; /* 映射为鼠标 X 轴 */
+            
+            /* 12位 ADC 的典型校准参数 (0-4095) */
+            mid-code = <2048>; /* 摇杆回中时的数值 */
+            deadzone = <200>;  /* 死区：防止摇杆物理回弹不准导致鼠标漂移 */
+            min-code = <0>;
+            max-code = <4095>;
+            
+            /* 灵敏度控制：被除数越大，鼠标移动越慢 */
+            multiplier = <1>;
+            divisor = <100>; 
+        };
+
+        y-ch {
+            io-channels = <&adc 5>; /* Y轴对应的 ADC 通道 */
+            evt-type = <INPUT_EV_REL>;
+            input-code = <INPUT_REL_Y>;
+            
+            mid-code = <2048>;
+            deadzone = <200>;
+            min-code = <0>;
+            max-code = <4095>;
+            multiplier = <1>;
+            divisor = <100>;
+            invertor; /* Y轴由于硬件安装方向，通常需要反转操作 */
+        };
     };
-};
-    // 2. 建立 ZMK 输入监听器（将上述绝对轴事件，转换为 HID 鼠标相对像素位移）
-    joystick_listener: joystick_listener {
+
+    /* 3. ZMK 原生监听器：将转换后的信号正式接入原生鼠标引擎 */
+    joystick_listener {
         compatible = "zmk,input-listener";
-        device = <&joystick>; // 订阅上面定义的类比摇杆设备
+        device = <&joystick>;
     };
 };
