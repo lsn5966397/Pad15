@@ -16,9 +16,10 @@
         zmk,physical-layout = &layout;
         zmk,underglow = &pad15_leds;
         zmk,battery = &vbatt;
+        zmk,ext-power = &pad15_ext_power_hw;
     };
 
-    ext_power: pad15_ext_power {
+    pad15_ext_power_hw: pad15_ext_power {
         compatible = "zmk,ext-power-generic";
         control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
         init-delay-ms = <50>;
