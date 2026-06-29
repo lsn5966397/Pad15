@@ -2,7 +2,7 @@
  * Pad15 包含：按键矩阵、触摸条、物理布局、LED、摇杆、编码器、电池检测
  * ========================================================================= */
 
-#include <physical_layouts.dtsi>
+#include "physical_layouts.dtsi"
 #include <dt-bindings/zmk/matrix_transform.h>
 #include <dt-bindings/led/led.h>
 #include <dt-bindings/pinctrl/nrf-pinctrl.h>
@@ -17,6 +17,14 @@
         zmk,underglow = &pad15_leds;
         zmk,battery = &vbatt;
     };
+
+    ext_power: pad15_ext_power {
+        compatible = "zmk,ext-power-generic";
+        control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+        init-delay-ms = <50>;
+        status = "okay";
+    };
+
     /* 1. 扫描器定义 */
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
@@ -124,11 +132,6 @@
         sensors = <&ec11_encoder>;
         triggers-per-rotation = <80>; 
     };
-
-	joystick_listener {
-        compatible = "zmk,input-listener";
-        device = <&anin0>; // 必须精准指向你的第三方模拟输入节点
-    };
 };
 
 /* --- 硬件外设引用区 (灯带、SPI、ADC、UART 等保持不变) --- */
@@ -182,14 +185,6 @@
     };
 };
 
-
-/* 强制重写或创建外部电源控制 */
-&ext_power {
-	/* 强制指定 gpio0 的 13 号引脚，高电平有效 */
-	control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
-	init-delay-ms = <50>;
-    status = "okay";
-};
 
 /* ==========================================
  * 1. 硬件层：完美的 ADC 采样配置 (解决读数 0V 的问题)
@@ -263,7 +258,6 @@
         };
     };
 
-    /* 3. 协议层：删掉上一回合那个报错的复杂修饰器，回归纯净监听 */
     joystick_listener {
         compatible = "zmk,input-listener";
         device = <&joystick>;
