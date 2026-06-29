@@ -56,11 +56,11 @@ overlay 在这里描述设备的配置和矩阵网络形状，还有MCU引脚配
 | Analog Input | GPIO  |
 | ------------ | ----- |
 | AINO         | P0.02 |
-| AIN1         | PO.03 |
+| AIN1         | P0.03 |
 | AIN2         | P0.04 |
 | AIN3         | P0.05 |
 | AIN4         | P0.28 |
-| AIN5         | Po.29 |
+| AIN5         | P0.29 |
 | AIN6         | P0.30 |
 | AIN7         | P0.31 |
 
