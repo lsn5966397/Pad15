@@ -48,6 +48,22 @@ conf 系统配置，比如蓝牙功率，灯光的最高亮度
 
 overlay 在这里描述设备的配置和矩阵网络形状，还有MCU引脚配置
 
+## 摇杆采用badjeff第三方模块
+项目网址： https://github.com/badjeff/zmk-analog-input-driver/tree/main
+
+引脚所对应的端口如下表，其实上方网址也有，但是个图片，我就复制过来看着方便
+
+| Analog Input | GPIO  |
+| ------------ | ----- |
+| AINO         | P0.02 |
+| AIN1         | PO.03 |
+| AIN2         | P0.04 |
+| AIN3         | P0.05 |
+| AIN4         | P0.28 |
+| AIN5         | Po.29 |
+| AIN6         | P0.30 |
+| AIN7         | P0.31 |
+
 ## 编写中遇到的问题
 1、 开机后会莫名卡死，按了没反应，但是灯光还亮\蓝牙没断
 
