@@ -85,6 +85,24 @@ overlay 在这里描述设备的配置和矩阵网络形状，还有MCU引脚配
 
 所以想要这里没东西还不透明，改用&none来设置键位。
 
+5、VCC完全没有电压
+
+到现在VCC为什么没有电压也没找到原因，只是检查了很多遍以后认为电路没有短路，通过在overlay文件中强制将vcc引脚设置为高电平：
+
+```
+    /* 强制重写或创建外部电源控制 */
+    ext-power {
+        compatible = "zmk,ext-power-generic";
+        /* 强制指定 gpio0 的 13 号引脚，高电平有效 */
+        control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+        init-delay-ms = <50>;
+    };
+```
+
+6、摇杆映射鼠标
+
+问题仍在解决中
+
 ## zmk keymap editor工具
 https://nickcoutsos.github.io/keymap-editor/
 
