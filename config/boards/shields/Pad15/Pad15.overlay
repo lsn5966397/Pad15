@@ -115,17 +115,6 @@
             &key_physical_attrs 100 100 300 500   0 0 0
         >;
     };
-};
-
-&uart0 {
-    status = "okay";
-    current-speed = <115200>;
-    // 根据你的硬件接线修改 TX/RX 引脚
-    tx-pin = <6>;
-    rx-pin = <8>;
-};
-
-
     /* 4. 电池与传感器节点 */
     vbatt: vbatt {
         compatible = "zmk,battery-nrf-vddh";
@@ -145,6 +134,16 @@
         triggers-per-rotation = <80>; 
     };
 };
+
+
+&uart0 {
+    status = "okay";
+    current-speed = <115200>;
+    // 根据你的硬件接线修改 TX/RX 引脚
+    tx-pin = <6>;
+    rx-pin = <8>;
+};
+
 
 /* --- 硬件外设引用区 (灯带、SPI、ADC、UART 等保持不变) --- */
 &pinctrl {
