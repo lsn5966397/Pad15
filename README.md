@@ -55,7 +55,7 @@ overlay 在这里描述设备的配置和矩阵网络形状，还有MCU引脚配
 
 | Analog Input | GPIO  |
 | ------------ | ----- |
-| AINO         | P0.02 |
+| AIN0         | P0.02 |
 | AIN1         | P0.03 |
 | AIN2         | P0.04 |
 | AIN3         | P0.05 |
