@@ -192,25 +192,47 @@
 };
 
 
+/* ==========================================
+ * 1. 硬件层：唤醒 ADC 并配置 3.6V 量程（绝对不能省）
+ * ========================================== */
 &adc {
     status = "okay";
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    channel@0 {
+        reg = <0>;
+        zephyr,gain = "ADC_GAIN_1_6";
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+        zephyr,input-positive = <NRF_SAADC_AIN0>; /* 对应 P0.02 */
+    };
+
+    channel@5 {
+        reg = <5>;
+        zephyr,gain = "ADC_GAIN_1_6";
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+        zephyr,input-positive = <NRF_SAADC_AIN5>; /* 对应 P0.29 */
+    };
 };
 
 / {
-    /* 2. 摇杆信号转换配置 */
+    /* ==========================================
+     * 2. 转换层：将物理电压转为相对位移（不带缩放）
+     * ========================================== */
     joystick: analog_input_0 {
         compatible = "zmk,analog-input";
-        sampling-hz = <100>; /* 轮询频率：100Hz，决定鼠标顺滑度 */
+        sampling-hz = <100>; 
 
-		x-ch {
+        x-ch {
             io-channels = <&adc 0>; 
             evt-type = <INPUT_EV_REL>;
             input-code = <INPUT_REL_X>;
             
             mv-mid = <1550>;      
             mv-min-max = <1650>;  
-            mv-deadzone = <200>;   
-            
+            mv-deadzone = <50>; /* 恢复到正常的 50 即可 */
         };
 
         y-ch {
@@ -220,14 +242,20 @@
             
             mv-mid = <1550>;
             mv-min-max = <1650>;
-            mv-deadzone = <200>;
-            
+            mv-deadzone = <50>;
         };
     };
 
-    /* 3. ZMK 原生监听器：将转换后的信号正式接入原生鼠标引擎 */
+    /* ==========================================
+     * 3. 协议层：ZMK 原生监听与修饰（在这里降速！）
+     * ========================================== */
     joystick_listener {
         compatible = "zmk,input-listener";
         device = <&joystick>;
+        
+        /* 核心大招：原生输入修饰器 */
+        /* &zip_xy_scaler 1 40 代表：将输出的坐标乘以 1，除以 40。 */
+        /* 这个 40 就是完美替代了之前被删除的 divisor！数值越大，鼠标越慢 */
+        input-processors = <&zip_xy_scaler 1 40>; 
     };
 };
