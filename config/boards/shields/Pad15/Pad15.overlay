@@ -209,7 +209,7 @@
             
             mv-mid = <1550>;      
             mv-min-max = <1650>;  
-            mv-deadzone = <100>;   
+            mv-deadzone = <200>;   
             
         };
 
@@ -220,7 +220,7 @@
             
             mv-mid = <1550>;
             mv-min-max = <1650>;
-            mv-deadzone = <100>;
+            mv-deadzone = <200>;
             
         };
     };
