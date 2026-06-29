@@ -209,9 +209,8 @@
             
             mv-mid = <1550>;      
             mv-min-max = <1650>;  
-            mv-deadzone = <50>;   
+            mv-deadzone = <100>;   
             
-            /* 已删除 multiplier 和 divisor */
         };
 
         y-ch {
@@ -221,9 +220,8 @@
             
             mv-mid = <1550>;
             mv-min-max = <1650>;
-            mv-deadzone = <50>;
+            mv-deadzone = <100>;
             
-            /* 已删除 multiplier, divisor 和 invertor */
         };
     };
 
