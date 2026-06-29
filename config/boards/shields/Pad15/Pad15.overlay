@@ -17,7 +17,7 @@
         zmk,underglow = &pad15_leds;
         zmk,battery = &vbatt;
         zmk,ext-power = &pad15_ext_power_hw;
-        zephyr,console = &uart0
+        zephyr,console = &uart0;
     };
 
     pad15_ext_power_hw: pad15_ext_power {
