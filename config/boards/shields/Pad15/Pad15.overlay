@@ -16,13 +16,13 @@
         zmk,physical-layout = &layout;
         zmk,underglow = &pad15_leds;
         zmk,battery = &vbatt;
-        
-        /* 1. 极简引用电源节点 (报错解决关键点) */
         zmk,ext-power = &ext_power;
-        
-        /* 2. 核心修复：已彻底删除 zephyr,console = &uart0; 
-         * 这样日志才会乖乖走到你的 Web Serial 网页端
-         */
+    };
+
+    ext_power {
+        control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+        init-delay-ms = <50>;
+        status = "okay";
     };
 
     /* 扫描器定义 */
@@ -164,16 +164,6 @@
     };
 }; /* 根节点闭合 */
 
-/* =======================================================
- * 外部节点覆盖区 (使用 & 语法，绝不重定义)
- * ======================================================= */
-
-/* 优雅覆盖底板的电源节点 (报错终结者) */
-&ext_power {
-    control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
-    init-delay-ms = <50>;
-    status = "okay";
-};
 
 /* 现代化的 pinctrl：只保留 SPI3 灯效 (UART0 已彻底铲除) */
 &pinctrl {
