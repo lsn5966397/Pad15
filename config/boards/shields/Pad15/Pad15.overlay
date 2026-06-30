@@ -22,6 +22,12 @@
         zephyr,console = &uart0;
     };
 
+    ext_power {
+        control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+        init-delay-ms = <50>;
+        status = "okay";
+    };
+
     /* 1. 扫描器定义 */
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
@@ -159,19 +165,11 @@
         compatible = "zmk,input-listener";
         device = <&joystick>;
     };
-}; /* 唯一根节点完美闭合 */
+}; 
 
 /* =======================================================
  * 外部节点覆盖区 (硬件引脚底层映射)
  * ======================================================= */
-
-/* [极简电源] 优雅覆盖 nice_nano 底板的电源节点，解决重定义报错 */
-&ext_power {
-    control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
-    init-delay-ms = <50>;
-    status = "okay";
-};
-
 /* 现代化的 pinctrl：集中管理所有设备的物理引脚 */
 &pinctrl {
     /* 为 UART0 声明标准的 TX/RX 引脚组 */
