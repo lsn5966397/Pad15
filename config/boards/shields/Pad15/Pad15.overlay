@@ -141,7 +141,7 @@
             mv-deadzone = <100>; 
             
             scale-multiplier = <1>;
-            scale-divisor = <80>; 
+            scale-divisor = <100>; 
         };
 
         y-ch {
@@ -154,7 +154,7 @@
             mv-deadzone = <100>;
             
             scale-multiplier = <3>;
-            scale-divisor = <80>;
+            scale-divisor = <100>;
         };
     };
 
