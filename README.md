@@ -101,7 +101,9 @@ overlay 在这里描述设备的配置和矩阵网络形状，还有MCU引脚配
 
 6、摇杆映射鼠标
 
-问题仍在解决中
+这是到现在最复杂、最难解决的一个问题。由于ZMK框架没有将摇杆信号直接映射为鼠标的功能，所以我们采用了第三方模块badjeff的zmk-analog-input-driver；它将检测ADC引脚的电压信号变化，将其转化为XY坐标输入给ZMK的pointing模块，然后控制鼠标移动。
+
+当系统没有收到电压信号的时候，它会认为你当前给的是0 mV的电压，因此会拼命朝某一方向移动，之前我没有调试好模块的时候，鼠标会往右下角拼命移动，这就是X和Y方向都没有收到电压信号的原因。
 
 ## zmk keymap editor工具
 https://nickcoutsos.github.io/keymap-editor/
