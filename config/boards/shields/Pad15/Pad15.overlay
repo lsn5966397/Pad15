@@ -222,7 +222,7 @@
     #address-cells = <1>;
     #size-cells = <0>;
 
-    channel@0 {
+    channel@5 {
         reg = <5>;
         zephyr,gain = "ADC_GAIN_1_6";
         zephyr,reference = "ADC_REF_INTERNAL";
@@ -231,7 +231,7 @@
         zephyr,input-positive = <NRF_SAADC_AIN0>; /* X轴 P0.02 */
     };
 
-    channel@5 {
+    channel@0 {
         reg = <0>;
         zephyr,gain = "ADC_GAIN_1_6";
         zephyr,reference = "ADC_REF_INTERNAL";
