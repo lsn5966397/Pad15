@@ -132,7 +132,7 @@
         sampling-hz = <100>; 
 
         x-ch {
-            io-channels = <&adc 0>; 
+            io-channels = <&adc 5>; 
             evt-type = <INPUT_EV_REL>;
             input-code = <INPUT_REL_X>;
             
@@ -145,7 +145,7 @@
         };
 
         y-ch {
-            io-channels = <&adc 5>;
+            io-channels = <&adc 0>;
             evt-type = <INPUT_EV_REL>;
             input-code = <INPUT_REL_Y>;
             
@@ -223,7 +223,7 @@
     #size-cells = <0>;
 
     channel@0 {
-        reg = <0>;
+        reg = <5>;
         zephyr,gain = "ADC_GAIN_1_6";
         zephyr,reference = "ADC_REF_INTERNAL";
         zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 40)>;
@@ -232,7 +232,7 @@
     };
 
     channel@5 {
-        reg = <5>;
+        reg = <0>;
         zephyr,gain = "ADC_GAIN_1_6";
         zephyr,reference = "ADC_REF_INTERNAL";
         zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 40)>;
