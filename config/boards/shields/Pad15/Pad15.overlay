@@ -126,16 +126,13 @@
         triggers-per-rotation = <80>; 
     };
 
-    /* ==========================================
-     * 核心修复区：强行打破命名束缚，证明 0.02 故障
-     * ========================================== */
+
     joystick: analog_input_0 {
         compatible = "zmk,analog-input";
         sampling-hz = <100>; 
 
-        /* 我们不用 x-ch 命名了，强行映射 0.29 为鼠标左右(X轴) */
-        node_x_axis {
-            io-channels = <&adc 5>; /* 绑定完好的物理引脚 P0.29 */
+        x-ch {
+            io-channels = <&adc 5>; 
             evt-type = <INPUT_EV_REL>;
             input-code = <INPUT_REL_X>; /* 指令：这就是X轴！ */
             
@@ -146,8 +143,7 @@
             scale-divisor = <300>; 
         };
 
-        /* 我们不用 y-ch 命名了，强行映射 0.02 为鼠标上下(Y轴) */
-        node_y_axis {
+        y-ch {
             io-channels = <&adc 0>; /* 绑定疑似损坏的物理引脚 P0.02 */
             evt-type = <INPUT_EV_REL>;
             input-code = <INPUT_REL_Y>; /* 指令：这就是Y轴！ */
@@ -223,15 +219,6 @@
     #address-cells = <1>;
     #size-cells = <0>;
 
-    channel@5 {
-        reg = <5>;
-        zephyr,gain = "ADC_GAIN_1_6";
-        zephyr,reference = "ADC_REF_INTERNAL";
-        zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 40)>;
-        zephyr,resolution = <12>; 
-        zephyr,input-positive = <NRF_SAADC_AIN5>; /* 物理引脚 P0.29 */
-    };
-
     channel@0 {
         reg = <0>;
         zephyr,gain = "ADC_GAIN_1_6";
@@ -239,5 +226,13 @@
         zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 40)>;
         zephyr,resolution = <12>;
         zephyr,input-positive = <NRF_SAADC_AIN0>; /* 物理引脚 P0.02 */
+    };
+    channel@5 {
+        reg = <5>;
+        zephyr,gain = "ADC_GAIN_1_6";
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 40)>;
+        zephyr,resolution = <12>; 
+        zephyr,input-positive = <NRF_SAADC_AIN5>; /* 物理引脚 P0.29 */
     };
 };
