@@ -15,7 +15,7 @@
         zmk,kscan = &kscan_combo;
         zmk,physical-layout = &layout;
         zmk,underglow = &pad15_leds;
-        zmk,battery = &vbatt;
+        zmk,battery = &vbatt_vddh;
         zmk,ext-power = &ext_power;
     };
 
@@ -107,9 +107,10 @@
         >;
     };
 
-    /* 电池与传感器节点 */
-    vbatt: vbatt {
+    /* 电池与传感器节点 声明使用芯片内部 VDDH 进行电压检测（不占用任何 GPIO 或外部 ADC） */
+    vbatt_vddh: vbatt_vddh {
         compatible = "zmk,battery-nrf-vddh";
+        label = "BATTERY_VDDH";
     };
 
     ec11_encoder: ec11_encoder {
@@ -161,6 +162,11 @@
         device = <&joystick>;
     };
 }; /* 根节点闭合 */
+
+&vbatt {
+    /delete-property/ io-channels; /* 彻底剥离对 &adc 0 的引用 */
+    status = "disabled";            /* 禁用该设备的驱动初始化 */
+};
 
 /* 现代化的 pinctrl：只保留 SPI3 灯效 */
 &pinctrl {
