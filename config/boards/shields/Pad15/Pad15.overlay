@@ -132,7 +132,7 @@
         sampling-hz = <100>; 
 
         x-ch {
-            io-channels = <&adc 0>; 
+            io-channels = <&adc 5>; 
             evt-type = <INPUT_EV_REL>;
             input-code = <INPUT_REL_X>; /* 指令：这就是X轴！ */
             
@@ -144,7 +144,7 @@
         };
 
         y-ch {
-            io-channels = <&adc 5>; 
+            io-channels = <&adc 0>; 
             evt-type = <INPUT_EV_REL>;
             input-code = <INPUT_REL_Y>; /* 指令：这就是Y轴！ */
             
