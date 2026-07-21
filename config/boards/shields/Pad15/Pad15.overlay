@@ -134,13 +134,13 @@
         x-ch {
             io-channels = <&adc 0>; 
             evt-type = <INPUT_EV_REL>;
-            input-code = <INPUT_REL_Y>; 
+            input-code = <INPUT_REL_Y>; /* 欺骗驱动：输出鼠标 Y 轴（上下） */
             
             mv-mid = <1500>;
             mv-min-max = <1500>;
-            mv-deadzone = <200>; 
+            mv-deadzone = <80>; 
             scale-multiplier = <1>;
-            scale-divisor = <500>; 
+            scale-divisor = <300>; 
         };
 
         y-ch {
@@ -150,9 +150,9 @@
             
             mv-mid = <1500>;
             mv-min-max = <1500>;
-            mv-deadzone = <200>;
+            mv-deadzone = <80>;
             scale-multiplier = <3>;
-            scale-divisor = <500>;
+            scale-divisor = <300>;
         };
     };
 
