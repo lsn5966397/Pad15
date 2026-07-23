@@ -81,11 +81,9 @@
             bindings = <
                 &kp DEL      &hold_tap C_PREVIOUS HOME  &hold_tap C_NEXT END      &hold_tap C_PLAY_PAUSE C_MUTE
                 &kp KP_NUMBER_7      &kp KP_NUMBER_8      &kp KP_NUMBER_9       &mkp LCLK
-                &kp KP_NUMBER_4      &kp KP_NUMBER_5      &kp KP_NUMBER_6       &msc SCRL_UP
-                &kp KP_NUMBER_1      &kp KP_NUMBER_2      &kp KP_NUMBER_3       &msc SCRL_UP
-                &kp KP_NUMBER_0      &kp PERIOD     &kp PRINTSCREEN       &msc SCRL_DOWN
-                /* 第六行 = 触摸条 4 个键（可随意绑定） */
-                &msc SCRL_DOWN
+                &kp KP_NUMBER_4      &kp KP_NUMBER_5      &kp KP_NUMBER_6       
+                &kp KP_NUMBER_1      &kp KP_NUMBER_2      &kp KP_NUMBER_3       
+                &kp KP_NUMBER_0      &kp PERIOD     &kp PRINTSCREEN       
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;   /* 绑定写在这里才能生效，顺时针音量加，逆时针音量减 */
         };
@@ -94,11 +92,9 @@
             bindings = <
                 &rgb_ug RGB_TOG  &kp F15  &kp K_SCREENSAVER  &kp C_MUTE
                 &kp F7      &kp F8      &kp F9      &mkp LCLK
-                &kp F4      &kp F5      &kp F6      &msc SCRL_UP
-                &kp F1      &kp F2      &kp F3      &msc SCRL_UP
-                &kp F10     &kp F11     &kp F12     &msc SCRL_DOWN
-                /* 第六行 = 触摸条 */
-                &msc SCRL_DOWN  
+                &kp F4      &kp F5      &kp F6      
+                &kp F1      &kp F2      &kp F3      
+                &kp F10     &kp F11     &kp F12     
             >;
         };
 
@@ -106,11 +102,9 @@
             bindings = <
                 &kp C_PLAY_PAUSE      &kp C_PREVIOUS     &kp C_NEXT      &kp C_MUTE
                 &ext_power EP_ON           &kp UP             &none           &mkp LCLK
-                &kp LEFT        &kp DOWN           &kp RIGHT       &msc SCRL_UP
-                &kp LEFT_SHIFT  &none              &kp LALT        &msc SCRL_UP
-                &kp LCTRL       &none              &kp SPACE       &msc SCRL_DOWN
-                /* 第六行 = 触摸条 */
-                &msc SCRL_DOWN  
+                &kp LEFT        &kp DOWN           &kp RIGHT       
+                &kp LEFT_SHIFT  &none              &kp LALT        
+                &kp LCTRL       &none              &kp SPACE       
             >;
         };
         /* === ZMK Studio 必须的保留层 === */
