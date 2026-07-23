@@ -19,6 +19,12 @@
         zmk,ext-power = &ext_power;
     };
 
+    ext_power {
+        compatible = "zmk,ext-power-generic";
+        control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+        init-delay-ms = <50>;
+        status = "okay";
+    };
     /* 扫描器定义 */
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
@@ -152,13 +158,6 @@
         device = <&joystick>;
     };
 }; /* 根节点闭合 */
-
-&ext_power {
-    compatible = "zmk,ext-power-generic";
-    control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
-    init-delay-ms = <50>;
-    status = "okay";
-};
 
 &vbatt {
     /delete-property/ io-channels; /* 彻底剥离对 &adc 0 的引用 */
