@@ -1,0 +1,13 @@
+description: Custom GPIO Touch Slider for Pad15
+
+compatible: "zmk,touch-slider"
+
+include: base.yaml
+
+properties:
+  pad-gpios:
+    type: phandle-array
+    required: true
+    description: |
+      Array of GPIOs used for the touch sensor pads.
+      Each entry should format as <&gpio_controller pin flags>.
