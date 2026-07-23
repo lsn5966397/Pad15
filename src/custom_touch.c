@@ -3,6 +3,7 @@
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/input/input.h>
 #include <zephyr/logging/log.h>
+#include <zephyr/devicetree.h>
 
 LOG_MODULE_REGISTER(custom_touch_slider, LOG_LEVEL_INF);
 
