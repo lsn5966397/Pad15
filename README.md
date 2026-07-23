@@ -28,17 +28,24 @@ BOM表和成本也一并开源在立创社区~
 ```
 Pad15/       ← 项目根目录
 ├── config/
-│   ├── Pad15.json
-│   ├── west.yml
-│   └── boards/shields/pad15/
-│       ├── Kconfig.defconfig
-│       ├── Kconfig.shield
-│       ├── Pad15.keymap
-│       ├── Pad15.zmk.yml
-│       ├── Pad15.dtsi
-│       ├── Pad15.conf
-│       └── Pad15.overlay
+│   └── west.yml
+├── zephyr/
+│   └── module.yml               ← 模块定义
+├── boards/
+│   └── shields/
+│       └── Pad15/                ← 核心配置文件
+│           ├── Kconfig.shield    
+│           ├── Kconfig.defconfig
+│           ├── Pad15.overlay     
+│           ├── Pad15.keymap      
+│           └── Pad15.conf       
+├── src/                        ← 自定义模块
+│   ├── custom_touch.c
+│   └── custom_led.c
+├── CMakeLists.txt
+└── Kconfig
 └── README.md
+└── build.yaml
 ```
 
 ## 各文件的内容解释
