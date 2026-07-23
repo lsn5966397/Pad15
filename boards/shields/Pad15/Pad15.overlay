@@ -41,7 +41,7 @@
     };
 
     custom_slider: custom_touch_slider {
-        compatible = "pad15,touch-slider";
+        compatible = "zmk,touch-slider";
         /* 按照从上到下的物理顺序排列引脚 */
         pad-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
                     <&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
