@@ -14,8 +14,13 @@ LOG_MODULE_REGISTER(custom_touch_slider, LOG_LEVEL_INF);
 #error "Touch slider node not found in device tree!"
 #endif
 
+/* 1. 定义一个自带逗号结尾的包装宏 */
+#define TOUCH_GPIO_DT_SPEC_GET(node_id, prop, idx) \
+    GPIO_DT_SPEC_GET_BY_IDX(node_id, prop, idx),
+
+/* 2. 使用我们自定义的包装宏进行自动遍历 */
 static const struct gpio_dt_spec pads[] = {
-    DT_FOREACH_PROP_ELEM(SLIDER_NODE, pad_gpios, GPIO_DT_SPEC_GET_BY_IDX)
+    DT_FOREACH_PROP_ELEM(SLIDER_NODE, pad_gpios, TOUCH_GPIO_DT_SPEC_GET)
 };
 
 #define NUM_PADS ARRAY_SIZE(pads)
