@@ -1,0 +1,4 @@
+name: pad15_module
+build:
+  cmake: .
+
