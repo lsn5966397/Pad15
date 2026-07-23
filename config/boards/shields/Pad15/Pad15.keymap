@@ -81,11 +81,11 @@
             bindings = <
                 &kp DEL      &hold_tap C_PREVIOUS HOME  &hold_tap C_NEXT END      &hold_tap C_PLAY_PAUSE C_MUTE
                 &kp KP_NUMBER_7      &kp KP_NUMBER_8      &kp KP_NUMBER_9       &mkp LCLK
-                &kp KP_NUMBER_4      &kp KP_NUMBER_5      &kp KP_NUMBER_6       &kp KP_NUMBER_6
-                &kp KP_NUMBER_1      &kp KP_NUMBER_2      &kp KP_NUMBER_3       &kp KP_NUMBER_6
-                &kp KP_NUMBER_0      &kp PERIOD     &kp PRINTSCREEN       &kp KP_NUMBER_6
+                &kp KP_NUMBER_4      &kp KP_NUMBER_5      &kp KP_NUMBER_6       &msc SCRL_UP
+                &kp KP_NUMBER_1      &kp KP_NUMBER_2      &kp KP_NUMBER_3       &msc SCRL_UP
+                &kp KP_NUMBER_0      &kp PERIOD     &kp PRINTSCREEN       &msc SCRL_DOWN
                 /* 第六行 = 触摸条 4 个键（可随意绑定） */
-                &kp KP_NUMBER_6
+                &msc SCRL_DOWN
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;   /* 绑定写在这里才能生效，顺时针音量加，逆时针音量减 */
         };
