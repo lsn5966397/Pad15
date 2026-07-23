@@ -16,7 +16,6 @@
         zmk,physical-layout = &layout;
         zmk,underglow = &pad15_leds;
         zmk,battery = &vbatt_vddh;
-        zmk,ext-power = &ext_power;
     };
 
     /* 扫描器定义 */
@@ -149,12 +148,6 @@
     };
 }; /* 根节点闭合 */
 
-&ext_power {
-    compatible = "zmk,ext-power-generic";
-    control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
-    init-delay-ms = <50>;
-    status = "okay";
-};
 
 &vbatt {
     /delete-property/ io-channels; /* 彻底剥离对 &adc 0 的引用 */
