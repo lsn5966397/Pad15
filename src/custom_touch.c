@@ -6,6 +6,7 @@
 #include <zephyr/devicetree.h>
 #include <stdlib.h>
 
+#if DT_NODE_HAS_STATUS(DT_NODELABEL(pad15_leds), okay)
 
 LOG_MODULE_REGISTER(custom_touch_slider, LOG_LEVEL_INF);
 
@@ -115,3 +116,5 @@ SYS_INIT(touch_slider_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
 K_THREAD_DEFINE(touch_slider_tid, STACK_SIZE,
                 (k_thread_entry_t)touch_slider_thread, NULL, NULL, NULL,
                 PRIORITY, 0, 0);
+
+#endif /* DT_NODE_HAS_STATUS */
