@@ -4,6 +4,7 @@
 #include <zephyr/input/input.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/devicetree.h>
+#include <stdlib.h>
 
 
 LOG_MODULE_REGISTER(custom_touch_slider, LOG_LEVEL_INF);
