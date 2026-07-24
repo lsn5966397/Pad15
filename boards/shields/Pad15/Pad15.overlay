@@ -33,17 +33,6 @@
                     <&gpio0 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
     };
 
-    custom_slider: custom_touch_slider {
-        compatible = "zmk,touch-slider";
-        status = "okay";  /* 【关键修复1】必须显式声明 okay，否则 C 宏无法识别它 */
-        
-        /* 按照从上到下的物理顺序排列引脚 */
-        pad-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
-                    <&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
-                    <&gpio0 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
-                    <&gpio1 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
-    };
-
     kscan_combo: kscan_combo {
         compatible = "zmk,kscan-composite";
         rows = <5>; 
@@ -185,23 +174,6 @@
         spi-one-frame = <0x70>;
         spi-zero-frame = <0x40>;
         color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
-        
-        led0: led_0 { x = <0>;   y = <0>; };
-        led1: led_1 { x = <10>; y = <0>; };
-        led2: led_2 { x = <20>; y = <0>; };
-        led3: led_3 { x = <0>;   y = <10>; };
-        led4: led_4 { x = <10>; y = <10>; };
-        led5: led_5 { x = <20>; y = <10>; };
-        led6: led_6 { x = <0>;   y = <20>; };
-        led7: led_7 { x = <10>; y = <20>; }; /* 【细节修复】统一加上下划线 */
-        led8: led_8 { x = <20>; y = <20>; };
-        led15: led_15 { x = <30>; y = <20>; };
-        led9:  led_9  { x = <0>;   y = <30>; };
-        led10: led_10 { x = <10>; y = <30>; };
-        led11: led_11 { x = <20>; y = <30>; };
-        led12: led_12 { x = <0>;   y = <40>; };
-        led13: led_13 { x = <10>; y = <40>; };
-        led14: led_14 { x = <20>; y = <40>; };
     };
 };
 
