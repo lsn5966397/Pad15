@@ -11,6 +11,7 @@
 #include <zmk/activity.h>
 #include <zmk/keymap.h>
 
+#if DT_NODE_HAS_STATUS(DT_NODELABEL(pad15_leds), okay)
 #define STRIP_NODE DT_NODELABEL(pad15_leds)
 #define NUM_PIXELS 16
 #define STATUS_LED_IDX 15
@@ -187,3 +188,5 @@ static int battery_status_listener(const zmk_event_t *eh) {
 }
 ZMK_LISTENER(battery_status, battery_status_listener);
 ZMK_SUBSCRIPTION(battery_status, zmk_battery_state_changed);
+
+#endif /* DT_NODE_HAS_STATUS */
