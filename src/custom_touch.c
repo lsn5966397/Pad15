@@ -5,23 +5,18 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/devicetree.h>
 
+
 LOG_MODULE_REGISTER(custom_touch_slider, LOG_LEVEL_INF);
 
-/* 从设备树获取引脚配置 */
-#define SLIDER_NODE DT_NODELABEL(custom_slider)
-
-/* 如果设备树中没有这个节点，就报错停止编译 */
-#if !DT_NODE_EXISTS(SLIDER_NODE)
-#error "Touch slider node not found in device tree!"
-#endif
-
-/* 1. 定义一个自带逗号结尾的包装宏 */
-#define TOUCH_GPIO_DT_SPEC_GET(node_id, prop, idx) \
-    GPIO_DT_SPEC_GET_BY_IDX(node_id, prop, idx),
-
-/* 2. 使用我们自定义的包装宏进行自动遍历 */
+/* 
+ * 绕过 YAML 绑定，直接在 C 代码中获取内置的 gpio0 和 gpio1 引脚。
+ * 注意：这里的引脚顺序要和你的物理布局从上到下保持一致。
+ */
 static const struct gpio_dt_spec pads[] = {
-    DT_FOREACH_PROP_ELEM(SLIDER_NODE, pad_gpios, TOUCH_GPIO_DT_SPEC_GET)
+    { .port = DEVICE_DT_GET(DT_NODELABEL(gpio1)), .pin = 6,  .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN },
+    { .port = DEVICE_DT_GET(DT_NODELABEL(gpio1)), .pin = 4,  .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN },
+    { .port = DEVICE_DT_GET(DT_NODELABEL(gpio0)), .pin = 11, .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN },
+    { .port = DEVICE_DT_GET(DT_NODELABEL(gpio1)), .pin = 0, .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN },
 };
 
 #define NUM_PADS ARRAY_SIZE(pads)
