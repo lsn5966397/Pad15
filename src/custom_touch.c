@@ -15,10 +15,10 @@ LOG_MODULE_REGISTER(custom_touch_slider, LOG_LEVEL_INF);
  * 注意：这里的引脚顺序要和你的物理布局从上到下保持一致。
  */
 static const struct gpio_dt_spec pads[] = {
-    { .port = DEVICE_DT_GET(DT_NODELABEL(gpio1)), .pin = 6,  .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN },
-    { .port = DEVICE_DT_GET(DT_NODELABEL(gpio1)), .pin = 4,  .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN },
-    { .port = DEVICE_DT_GET(DT_NODELABEL(gpio0)), .pin = 11, .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN },
     { .port = DEVICE_DT_GET(DT_NODELABEL(gpio1)), .pin = 0, .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN },
+    { .port = DEVICE_DT_GET(DT_NODELABEL(gpio0)), .pin = 11, .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN },
+    { .port = DEVICE_DT_GET(DT_NODELABEL(gpio1)), .pin = 4,  .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN },
+    { .port = DEVICE_DT_GET(DT_NODELABEL(gpio1)), .pin = 6,  .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN },
 };
 
 #define NUM_PADS ARRAY_SIZE(pads)
