@@ -2,7 +2,6 @@
 #include <zephyr/device.h>
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/input/input.h>
-#include <zephyr/logging/log.h>
 #include <zephyr/devicetree.h>
 
 /*
@@ -10,70 +9,60 @@
  * Pad15 四通道电容触摸滚轮
  * ============================================================
  *
- * 触摸板物理顺序：
+ * 物理顺序：
  *
- *     [0] 最上
- *     [1] 次上
- *     [2] 次下
- *     [3] 最下
+ *   [0] 最上
+ *   [1]
+ *   [2]
+ *   [3] 最下
  *
- * 手指向下滑：
  *
- *     0 -> 1 -> 2 -> 3
- *         ↓
- *       页面向下滚
+ * 向下滑：
  *
- * 手指向上滑：
+ *   0 -> 1 -> 2 -> 3
  *
- *     3 -> 2 -> 1 -> 0
- *         ↓
- *       页面向上滚
+ *   = 鼠标向下滚
  *
- * 本实现不直接调用 ZMK HID API。
  *
- * 而是借用现有 joystick input device 作为合法的
- * Zephyr input event 来源：
+ * 向上滑：
  *
- *     custom_touch
- *          ↓
- *     input_report_rel(joystick, ...)
- *          ↓
- *     joystick_listener
- *          ↓
- *     ZMK pointing
- *          ↓
- *     USB / BLE HID Mouse
+ *   3 -> 2 -> 1 -> 0
  *
- * 这样可以避免不同 ZMK 版本之间 HID API 名称变化。
+ *   = 鼠标向上滚
+ *
+ * ============================================================
  */
 
 
 /* ============================================================
  * 1. 四个触摸 GPIO
  * ============================================================
- *
- * 按照“从上到下”的物理顺序排列。
  */
 
 static const struct gpio_dt_spec pads[] = {
+
+    /* [0] 最上方 */
     {
         .port = DEVICE_DT_GET(DT_NODELABEL(gpio1)),
         .pin = 0,
         .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN
     },
 
+    /* [1] */
     {
         .port = DEVICE_DT_GET(DT_NODELABEL(gpio0)),
         .pin = 11,
         .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN
     },
 
+    /* [2] */
     {
         .port = DEVICE_DT_GET(DT_NODELABEL(gpio1)),
         .pin = 4,
         .dt_flags = GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN
     },
 
+    /* [3] 最下方 */
     {
         .port = DEVICE_DT_GET(DT_NODELABEL(gpio1)),
         .pin = 6,
@@ -89,30 +78,18 @@ static const struct gpio_dt_spec pads[] = {
  * ============================================================
  */
 
-/*
- * GPIO 扫描周期：
- *
- * 20 ms = 50 Hz
- */
 #define TOUCH_SCAN_INTERVAL_MS 20
 
-
 /*
- * 简单去抖：
+ * 连续两次检测到相同状态才确认。
  *
- * 连续两次得到相同状态以后才认为状态稳定。
- *
- * 2 × 20ms = 40ms
+ * 20ms × 2 = 40ms
  */
 #define TOUCH_STABLE_COUNT 2
 
 
 /*
- * 每跨过一个触摸区域发送几个滚轮单位。
- *
- * 初始设置为 1。
- *
- * 后面如果觉得太慢，可以改成 2 或 3。
+ * 每跨过一个触摸区域产生几个滚轮单位。
  */
 #define SCROLL_TICKS_PER_STEP 1
 
@@ -137,31 +114,28 @@ static int current_pad = -1;
 
 
 /*
- * 去抖候选状态。
+ * 去抖状态
  */
 static int candidate_pad = -1;
 static int candidate_count = 0;
 
 
 /* ============================================================
- * 4. 使用现有 joystick 设备作为 input event 来源
+ * 4. 使用现有 joystick device 作为 Input Event 来源
  * ============================================================
  *
- * 你的 Pad15.overlay 已经有：
+ * Pad15.overlay 中已经有：
  *
  *     joystick: analog_input_0
  *
- * 以及：
+ * 并且已经有：
  *
  *     joystick_listener {
  *         compatible = "zmk,input-listener";
  *         device = <&joystick>;
  *     };
  *
- * 所以我们直接让触摸板产生“来自 joystick device”的
- * INPUT_REL_WHEEL 事件。
- *
- * 这样 ZMK 会正常把事件送入 pointing HID。
+ * 因此这里直接使用 joystick 这个合法的 input device。
  */
 
 static const struct device *touch_input_device =
@@ -169,17 +143,8 @@ static const struct device *touch_input_device =
 
 
 /* ============================================================
- * 5. 发送一个鼠标滚轮事件
+ * 5. 发送一个滚轮事件
  * ============================================================
- *
- * 注意：
- *
- * 你的原始代码定义：
- *
- *     +1 = Scroll UP
- *     -1 = Scroll DOWN
- *
- * 我保持这个方向不变。
  */
 
 static void send_scroll(int direction)
@@ -188,48 +153,23 @@ static void send_scroll(int direction)
         return;
     }
 
-
     for (int i = 0; i < SCROLL_TICKS_PER_STEP; i++) {
 
         /*
-         * 注意这里最重要的变化：
-         *
-         * 不能再写：
+         * 不再使用：
          *
          *     input_report_rel(NULL, ...)
          *
-         * 因为 ZMK input listener 会拒绝 dev == NULL。
-         *
-         * 现在使用：
-         *
-         *     touch_input_device
-         *
-         * 它就是你的 joystick device。
+         * 必须提供一个有效的 input device。
          */
-        int err = input_report_rel(
+
+        input_report_rel(
             touch_input_device,
             INPUT_REL_WHEEL,
             direction,
             true,
             K_NO_WAIT
         );
-
-
-        if (err != 0) {
-            LOG_ERR(
-                "Failed to send scroll event: %d",
-                err
-            );
-        }
-        else {
-            if (direction > 0) {
-                LOG_INF("Scroll UP (+%d)", direction);
-            }
-            else {
-                LOG_INF("Scroll DOWN (%d)", direction);
-            }
-        }
-
 
         /*
          * 如果以后一个区域对应多个 tick，
@@ -243,32 +183,19 @@ static void send_scroll(int direction)
 
 
 /* ============================================================
- * 6. 读取四个触摸通道
+ * 6. 读取触摸位置
  * ============================================================
  *
  * 返回：
  *
- *   -1 : 没有触摸
- *    0 : 触摸最上方
- *    1 : 触摸次上方
- *    2 : 触摸次下方
- *    3 : 触摸最下方
+ *   -1 = 没有触摸
+ *    0 = 最上
+ *    1 = 次上
+ *    2 = 次下
+ *    3 = 最下
  *
- * 正常情况下 AI04 应该只有一个输出有效。
- *
- * 如果滑动过程中出现两个相邻通道同时为高：
- *
- *     0 + 1
- *
- * 或：
- *
- *     1 + 2
- *
- * 或：
- *
- *     2 + 3
- *
- * 则取平均位置，减少边界跳变。
+ * 如果两个相邻触摸通道同时有效，
+ * 则取平均位置。
  */
 
 static int read_touch_position(void)
@@ -283,15 +210,9 @@ static int read_touch_position(void)
 
 
         /*
-         * GPIO 读取错误。
+         * 读取失败时直接忽略这个 GPIO。
          */
         if (state < 0) {
-            LOG_ERR(
-                "Failed to read touch pad %d: %d",
-                i,
-                state
-            );
-
             continue;
         }
 
@@ -312,7 +233,7 @@ static int read_touch_position(void)
 
 
     /*
-     * 只有一个通道有效。
+     * 一个触摸区域有效。
      */
     if (active_count == 1) {
         return active_sum;
@@ -320,20 +241,19 @@ static int read_touch_position(void)
 
 
     /*
-     * 多个通道同时有效。
+     * 多个区域同时有效：
      *
-     * 使用平均位置。
+     * 计算平均位置。
      */
     int position =
-        (active_sum + active_count / 2) / active_count;
+        (active_sum + active_count / 2) /
+        active_count;
 
 
-    /*
-     * 安全限制。
-     */
     if (position < 0) {
         position = 0;
     }
+
 
     if (position >= NUM_PADS) {
         position = NUM_PADS - 1;
@@ -353,18 +273,11 @@ static void process_touch_position(int new_pad)
 {
     /*
      * --------------------------------------------------------
-     * A. 松开
+     * 松手
      * --------------------------------------------------------
      */
 
     if (new_pad < 0) {
-
-        if (current_pad != -1) {
-            LOG_INF(
-                "Touch released from pad %d",
-                current_pad
-            );
-        }
 
         current_pad = -1;
 
@@ -374,22 +287,15 @@ static void process_touch_position(int new_pad)
 
     /*
      * --------------------------------------------------------
-     * B. 第一次触摸
+     * 第一次触摸
      * --------------------------------------------------------
      *
-     * 第一次碰到触摸板只建立起点。
-     *
-     * 不滚动。
+     * 只建立起点，不滚动。
      */
 
     if (current_pad == -1) {
 
         current_pad = new_pad;
-
-        LOG_INF(
-            "Touch started at pad %d",
-            current_pad
-        );
 
         return;
     }
@@ -397,7 +303,7 @@ static void process_touch_position(int new_pad)
 
     /*
      * --------------------------------------------------------
-     * C. 位置没有变化
+     * 位置没有变化
      * --------------------------------------------------------
      */
 
@@ -408,29 +314,21 @@ static void process_touch_position(int new_pad)
 
     /*
      * --------------------------------------------------------
-     * D. 计算位移
+     * 计算移动距离
      * --------------------------------------------------------
      */
 
-    int delta = new_pad - current_pad;
-
-
-    LOG_INF(
-        "Touch moved: %d -> %d",
-        current_pad,
-        new_pad
-    );
+    int delta =
+        new_pad - current_pad;
 
 
     /*
      * --------------------------------------------------------
-     * 向下移动
+     * 向下滑
      *
-     *     0 -> 1
-     *     1 -> 2
-     *     2 -> 3
-     *
-     * 页面向下滚。
+     * 0 -> 1
+     * 1 -> 2
+     * 2 -> 3
      *
      * Scroll DOWN = -1
      * --------------------------------------------------------
@@ -447,13 +345,11 @@ static void process_touch_position(int new_pad)
 
     /*
      * --------------------------------------------------------
-     * 向上移动
+     * 向上滑
      *
-     *     3 -> 2
-     *     2 -> 1
-     *     1 -> 0
-     *
-     * 页面向上滚。
+     * 3 -> 2
+     * 2 -> 1
+     * 1 -> 0
      *
      * Scroll UP = +1
      * --------------------------------------------------------
@@ -482,16 +378,10 @@ static void process_touch_position(int new_pad)
 
 static void touch_slider_thread(void)
 {
-    LOG_INF("========================================");
-    LOG_INF("Pad15 Touch Wheel Started");
-    LOG_INF("Pads: P1.00 / P0.11 / P1.04 / P1.06");
-    LOG_INF("========================================");
-
-
     while (1) {
 
         /*
-         * 读取当前触摸位置。
+         * 读取触摸位置。
          */
         int detected_pad =
             read_touch_position();
@@ -499,44 +389,39 @@ static void touch_slider_thread(void)
 
         /*
          * ----------------------------------------------------
-         * 软件去抖
+         * 去抖
          * ----------------------------------------------------
          */
 
         if (detected_pad != candidate_pad) {
 
-            /*
-             * 新状态出现。
-             */
-            candidate_pad = detected_pad;
+            candidate_pad =
+                detected_pad;
+
             candidate_count = 1;
         }
         else {
 
-            /*
-             * 状态保持。
-             */
             candidate_count++;
         }
 
 
         /*
-         * 状态稳定以后交给主状态机。
+         * 状态稳定以后处理。
          */
         if (candidate_count >= TOUCH_STABLE_COUNT) {
 
-            process_touch_position(candidate_pad);
+            process_touch_position(
+                candidate_pad
+            );
 
-            /*
-             * 防止无限增加。
-             */
             candidate_count =
                 TOUCH_STABLE_COUNT;
         }
 
 
         /*
-         * 50 Hz 扫描。
+         * 50Hz 扫描。
          */
         k_msleep(
             TOUCH_SCAN_INTERVAL_MS
@@ -552,36 +437,20 @@ static void touch_slider_thread(void)
 
 static int touch_slider_init(void)
 {
-    LOG_INF(
-        "Initializing Pad15 touch GPIO..."
-    );
-
-
     /*
-     * 检查 joystick input device。
+     * 检查 joystick device。
      */
     if (!device_is_ready(touch_input_device)) {
-
-        LOG_ERR(
-            "Joystick input device is not ready"
-        );
-
         return -ENODEV;
     }
 
 
     /*
-     * 初始化四个触摸 GPIO。
+     * 初始化四个 GPIO。
      */
     for (int i = 0; i < NUM_PADS; i++) {
 
         if (!gpio_is_ready_dt(&pads[i])) {
-
-            LOG_ERR(
-                "Touch GPIO %d is not ready",
-                i
-            );
-
             return -ENODEV;
         }
 
@@ -594,27 +463,9 @@ static int touch_slider_init(void)
 
 
         if (err != 0) {
-
-            LOG_ERR(
-                "Failed to configure touch GPIO %d: %d",
-                i,
-                err
-            );
-
             return err;
         }
-
-
-        LOG_INF(
-            "Touch GPIO %d initialized",
-            i
-        );
     }
-
-
-    LOG_INF(
-        "Pad15 touch GPIO initialization complete"
-    );
 
 
     return 0;
@@ -634,7 +485,7 @@ SYS_INIT(
 
 
 /* ============================================================
- * 11. 创建触摸扫描线程
+ * 11. 创建线程
  * ============================================================
  */
 
