@@ -28,34 +28,51 @@ BOM表和成本也一并开源在立创社区~
 
 现在的ZMK支持只写配置文件，通过自动化编译工作流脚本生成编译文件，基本配置文件的结构如下：
 ```
-Pad15/       ← 项目根目录
-├── config/
-│   └── west.yml
-├── zephyr/
-│   └── module.yml               ← 模块定义
+Pad15/
+│
+├── .github/
+│   └── workflows/
+│       └── build.yml        ← 使用GitHub Actions编译，并调用 ZMK 官方的 reusable workflow
+│
+├── .releases/        ← 成品固件
+│   └── pad15-basic-260330.uf2
+│
 ├── boards/
 │   └── shields/
-│       └── Pad15/                ← 核心配置文件
-│           ├── Kconfig.shield    
+│       └── Pad15/
+│           ├── Kconfig.shield
 │           ├── Kconfig.defconfig
-│           ├── Pad15.overlay     
-│           ├── Pad15.keymap      
-│           └── Pad15.conf       
-├── src/                        ← 自定义模块
-│   ├── custom_touch.c
-│   └── custom_led.c
+│           ├── Pad15.conf
+│           ├── Pad15.keymap
+│           ├── Pad15.overlay
+│           └── Pad15.zmk.yml
+│
+├── config/
+│   └── west.yml        ← West 的外部依赖项管理配置
+│
+├── dts/
+│   └── bindings/
+│       └── zmk,touch-slider.yaml
+│
+├── src/        ← 自定义 C 程序
+│   ├── custom_led.c
+│   └── custom_touch.c
+│
+├── zephyr/
+│   └── module.yml
+│
 ├── CMakeLists.txt
-└── Kconfig
+├── Kconfig
+├── build.yaml        ← 编译文件管理
 └── README.md
-└── build.yaml
 ```
 
 ## 各文件的内容解释
-keymap 具体的按键功能和行为，包括宏和组合按键
+keymap 用户交互设置，具体的按键功能和行为，包括宏和组合按键等。
 
-conf 系统配置，比如蓝牙功率，灯光的最高亮度
+conf 系统功能配置文件，功能开关和参数的具体配置。比如鼠标功能开闭，蓝牙功率、灯光的最高亮度的参数设定。
 
-overlay 在这里描述设备的配置和矩阵网络形状，还有MCU引脚配置
+overlay 设备树描述文件，在这里描述设备的配置和矩阵网络形状，MCU引脚配置。
 
 ## 摇杆采用badjeff第三方模块
 项目网址： https://github.com/badjeff/zmk-analog-input-driver/tree/main
@@ -119,6 +136,8 @@ overlay 在这里描述设备的配置和矩阵网络形状，还有MCU引脚配
 在本项目的电路设计当中，触摸板芯片外围有一圈电容电阻需要自己焊接，所以这部分的电路是整个项目最复杂的。我一直很害怕哪一个元件焊错了，导致整个触摸板电路不生效，还得一点点排查。还好一次就测试通过了，在 overlay 文件当中直接设置每一个按键的映射。
 
 是自定义触摸板，把触摸板被激发的时间顺序和时间间隔，映射成滑动页面的速度和位移，来模拟鼠标滚轮的滚动。
+
+在GPT的帮助下，重构了整个项目的文件结构，在CMakeLists.txt 中定义模块文件并在 Kconfig 中设置是否默认开启，我选择默认关闭，再去conf文件中打开；这样的重构增加了项目整体的可读性和扩展性。
 
 ## zmk keymap editor工具
 https://nickcoutsos.github.io/keymap-editor/
