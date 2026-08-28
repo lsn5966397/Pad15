@@ -4,24 +4,6 @@
 #include <zephyr/input/input.h>
 #include <zephyr/devicetree.h>
 
-/*
- * ============================================================
- * 重要：
- *
- * GitHub Actions 的 build.yaml 同时编译：
- *
- *   1. Pad15
- *   2. settings_reset
- *
- * settings_reset 没有 Pad15.overlay，
- * 因此没有 pad15_leds / joystick 等节点。
- *
- * 这里用 pad15_leds 作为 Pad15 专属代码的编译开关。
- * ============================================================
- */
-
-#if DT_NODE_HAS_STATUS(DT_NODELABEL(pad15_leds), okay)
-
 
 /*
  * ============================================================
@@ -433,6 +415,3 @@ K_THREAD_DEFINE(
     0,
     0
 );
-
-
-#endif /* DT_NODE_HAS_STATUS(DT_NODELABEL(pad15_leds), okay) */
