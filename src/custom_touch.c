@@ -71,9 +71,9 @@ static const struct gpio_dt_spec pads[] = {
  * ============================================================
  */
 
-#define TOUCH_SCAN_INTERVAL_MS 20
-#define TOUCH_STABLE_COUNT 2
-#define SCROLL_TICKS_PER_STEP 1
+#define TOUCH_SCAN_INTERVAL_MS 10
+#define TOUCH_STABLE_COUNT 1
+#define SCROLL_TICKS_PER_STEP 4
 
 #define STACK_SIZE 1024
 #define PRIORITY 7
