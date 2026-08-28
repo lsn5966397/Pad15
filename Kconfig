@@ -2,9 +2,20 @@ menu "Custom LED Module"
 
 config CUSTOM_LED
     bool "Enable custom WS2812 LED animation for Pad15"
-    default y
+    default n
     depends on LED_STRIP          # ← 改成 depends on（不要用 select）
     help
       启用自定义 underglow 灯效线程（支持层指示、电池状态、休眠省电、效果切换等）。
+
+endmenu
+
+menu "Pad15 custom features"
+
+config CUSTOM_TOUCH
+    bool "Pad15 custom touch wheel"
+    default n
+    help
+      Enable the Pad15 four-channel capacitive touch slider
+      custom mouse-wheel implementation.
 
 endmenu
