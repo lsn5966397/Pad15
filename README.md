@@ -58,7 +58,7 @@ Pad15/
 │   └── module.yml
 │
 ├── CMakeLists.txt
-├── Kconfig
+├── Kconfig           ← 定义自定义软件功能及开关
 ├── build.yaml        ← 编译文件管理
 └── README.md
 ```
