@@ -1,8 +1,0 @@
-description: Custom touch slider configuration
-compatible: "zmk,touch-slider"
-include: base.yaml
-properties:
-  pad-gpios:
-    type: phandle-array
-    required: true
-    description: GPIO pins for the touch slider pads
