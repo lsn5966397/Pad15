@@ -50,10 +50,6 @@ Pad15/
 ├── config/
 │   └── west.yml        ← West 的外部依赖项管理配置
 │
-├── dts/
-│   └── bindings/
-│       └── zmk,touch-slider.yaml
-│
 ├── src/        ← 自定义 C 程序
 │   ├── custom_led.c
 │   └── custom_touch.c
