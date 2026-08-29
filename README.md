@@ -1,7 +1,7 @@
 # Pad15
-这是一个带有EC11旋钮、霍尔摇杆和触摸板的有线蓝牙双模多功能小键盘项目，使用nRF52840 super mini开发板制作，基于ZMK框架主分支开发。
+这是一个带有EC11旋钮、霍尔摇杆和触摸板的有线蓝牙双模多功能小键盘项目，使用nRF52840 super mini开发板制作，基于ZMK框架v3.0开发。
 
-This is a dual-mode (wired + Bluetooth) multifunctional keypad project with a EC11 rotary encoder, hall joystick and a 4 channels touchpad. It is built using the nRF52840 Super Mini development board and developed based on main branch of the ZMK framework.
+This is a dual-mode (wired + Bluetooth) multifunctional keypad project with a EC11 rotary encoder, hall joystick and a 4 channels touchpad. It is built using the nRF52840 Super Mini development board and developed based on v3.0 of the ZMK framework.
 
 # 电路设计
 本项目的PCB使用嘉立创EDA设计，使用嘉立创每月免费打板额度，PCB会开源在嘉立创社区，与本项目代码仓库互相引用；
