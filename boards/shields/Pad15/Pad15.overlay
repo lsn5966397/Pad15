@@ -149,6 +149,10 @@
     status = "disabled";            /* 禁用该设备的驱动初始化 */
 };
 
+&uicr {
+    nfct-pins-as-gpios;
+};
+
 /* 现代化的 pinctrl：只保留 SPI3 灯效 */
 &pinctrl {
     spi3_default: spi3_default {
