@@ -96,6 +96,7 @@
                 &kp F1      &kp F2      &kp F3      
                 &kp F10     &kp F11     &kp F12     
             >;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;   /* 绑定写在这里才能生效，顺时针音量加，逆时针音量减 */
         };
 
         game {
@@ -106,6 +107,7 @@
                 &kp LEFT_SHIFT  &none              &kp LALT        
                 &kp LCTRL       &none              &kp SPACE       
             >;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;   /* 绑定写在这里才能生效，顺时针音量加，逆时针音量减 */
         };
         /* === ZMK Studio 必须的保留层 === */
         extra1 {
