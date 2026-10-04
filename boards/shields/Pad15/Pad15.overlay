@@ -95,8 +95,8 @@
 
     ec11_encoder: ec11_encoder {
         compatible = "alps,ec11";
-        a-gpios = <&gpio0 9 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
-        b-gpios = <&gpio0 22 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
+        a-gpios = <&gpio0 9 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        b-gpios = <&gpio0 22 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
         steps = <80>; 
         status = "okay";
     };
@@ -104,7 +104,7 @@
     sensors {
         compatible = "zmk,keymap-sensors";
         sensors = <&ec11_encoder>;
-        triggers-per-rotation = <90>; 
+        triggers-per-rotation = <20>; 
     };
 
     joystick: analog_input_0 {
