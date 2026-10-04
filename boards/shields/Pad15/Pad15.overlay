@@ -95,9 +95,10 @@
 
     ec11_encoder: ec11_encoder {
         compatible = "alps,ec11";
-        a-gpios = <&gpio0 9 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-        b-gpios = <&gpio0 22 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        a-gpios = <&gpio0 9 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
+        b-gpios = <&gpio0 22 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
         steps = <80>; 
+        resolution = <4>; /* 显式声明解析度，通常 1 个手感刻度 = 4 个电气跳变 */
         status = "okay";
     };
 
