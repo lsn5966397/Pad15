@@ -98,7 +98,6 @@
         a-gpios = <&gpio0 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
         b-gpios = <&gpio0 22 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
         steps = <80>; 
-        resolution = <4>; /* 显式声明解析度，通常 1 个手感刻度 = 4 个电气跳变 */
         status = "okay";
     };
 
